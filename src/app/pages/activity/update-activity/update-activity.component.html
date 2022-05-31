@@ -1,0 +1,42 @@
+<h1 mat-dialog-title align="center">Atualização de atividade</h1>
+<form [formGroup]="updateForm" class="container-fluid">
+    <div class="row">
+        <mat-form-field *ngIf="activity.status !== StatusEnum[status]" class="col">
+            <mat-label>Status</mat-label>
+            <mat-select #statusSelect
+                formControlName="status"
+                required>
+                <mat-option *ngFor="let status of statuses" [value]="status">
+                    {{ status }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field class="col">
+            <mat-label>Situaçao</mat-label>
+            <mat-select
+                formControlName="situation"
+                required>
+                <mat-option *ngFor="let situation of situations" [value]="situation">
+                    {{ situation }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <mat-form-field class="full-width">
+        <mat-label>Descrição</mat-label>
+        <textarea #description
+            formControlName="description"
+            matInput
+            maxLength="255"
+            placeholder="Descreva os detalhes da atividade"
+            required></textarea>
+            <mat-hint align="end">{{ description.value.length }} / 255</mat-hint>
+    </mat-form-field>
+    <div mat-dialog-actions align="center">
+        <button mat-button mat-dialog-close [value]="false">Fechar</button>
+        <button
+            mat-button
+            [disabled]="updateForm.invalid"
+            (click)="updateActivity()">Confirmar</button>
+    </div>
+</form>

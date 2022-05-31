@@ -1,0 +1,155 @@
+<mat-toolbar color="primary" class="mb-4">
+    <mat-toolbar-row class="container justify-content-around">
+        <span class="mat-menu-trigger-container">
+            <mat-icon class="home-logo" aria-hidden="false" aria-label="Home icon">fact_check</mat-icon>
+            Activity Tracker
+        </span>
+        <mat-select #categorySelect
+            placeholder="Selecione a categoria"
+            class="dashboard-select"
+            (selectionChange)="getTopics($event)">
+            <mat-option *ngFor="let category of categories | async" [value]="category.name">{{ category.name }}</mat-option>
+        </mat-select>
+        <mat-select
+            placeholder="Selecione o Tópico"
+            class="dashboard-select"
+            [disabled]="!categorySelect.value"
+            [class.dashboard-select-disabled]="!categorySelect.value"
+            (selectionChange)="updateAffected($event)">
+            <mat-option *ngFor="let topic of topics | async" [value]="topic.name">{{ topic.name }}</mat-option>
+        </mat-select>
+        <div class="right-aligned">
+            <span style="padding-right: 30px;" class="mat-menu-trigger-container">
+              <mat-icon aria-hidden="true" (click)="switchTheme($event)">{{ theme }}</mat-icon>
+            </span>
+            <span
+              class="mat-menu-trigger-container"
+              [matMenuTriggerFor]="menu">
+                <mat-icon class="user-icon" aria-hidden="false" aria-label="User account">account_circle</mat-icon>
+                {{ getUsername() }}
+            </span>
+        </div>
+        <mat-menu #menu="matMenu" xPosition="before">
+            <button mat-menu-item (click)="logout()">Logout</button>
+        </mat-menu>
+    </mat-toolbar-row>
+</mat-toolbar>
+<div *ngIf="showContent; else emptyContent" class="container">
+    <div class="row row-cols-3">
+        <div class="col justify-content-between d-flex flex-column">
+            <div *ngIf="(isScheduledReady$ | async) === false" class="spinner-container">
+                <mat-spinner class="spinner" [diameter]="40"></mat-spinner>
+            </div>
+            <div class="example-container" [hidden]="(isScheduledReady$ | async) === false">
+                <h2>Scheduled</h2>
+                <button
+                    mat-raised-button
+                    matTooltip="Criar uma nova atividade"
+                    colar="primary"
+                    class="addition-button"
+                    (click)="openActivityRegistrationDialog(StatusEnum.scheduled)"><strong>+</strong> Criar uma nova atividade</button>
+                <div
+                    cdkDropList
+                    #scheduledList="cdkDropList"
+                    [cdkDropListData]="(scheduled | async)!"
+                    [cdkDropListConnectedTo]="[progressList, resolvedList]"
+                    class="example-list"
+                    (cdkDropListDropped)="drop($event, StatusEnum.scheduled)">
+                    <div
+                        class="example-box"
+                        *ngFor="let item of scheduled | async"
+                        (click)="updateWithoutStatus(item, StatusEnum.scheduled)"
+                        cdkDrag
+                        [class.drag]="dragging"
+                        (cdkDragStarted)="handleDragStart($event)">
+                        {{ item.title }}
+                        <a (click)="openActivityDetails($event, item, StatusEnum.scheduled)">
+                          <mat-icon aria-hidden="false" aria-label="Open Page With Details about activity">
+                            open_in_new
+                          </mat-icon>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col justify-content-between d-flex flex-column">
+            <div *ngIf="(isOngoingReady$ | async) === false" class="spinner-container">
+                <mat-spinner class="spinner" [diameter]="40"></mat-spinner>
+            </div>
+            <div class="example-container" [hidden]="(isOngoingReady$ | async) === false">
+                <h2>In Progress</h2>
+                <button
+                    mat-raised-button
+                    matTooltip="Criar uma nova atividade"
+                    colar="primary"
+                    class="addition-button"
+                    (click)="openActivityRegistrationDialog(StatusEnum.in_progress)"><strong>+</strong> Criar uma nova atividade</button>
+                <div
+                    cdkDropList
+                    #progressList="cdkDropList"
+                    [cdkDropListData]="(ongoing | async)!"
+                    [cdkDropListConnectedTo]="[resolvedList]"
+                    class="example-list"
+                    (cdkDropListDropped)="drop($event, StatusEnum.in_progress)">
+                    <div
+                        class="example-box"
+                        *ngFor="let item of ongoing | async"
+                        (click)="updateWithoutStatus(item, StatusEnum.in_progress)"
+                        cdkDrag
+                        [class.drag]="dragging"
+                        (cdkDragStarted)="handleDragStart($event)">
+                        {{ item.title }}
+                        <a (click)="openActivityDetails($event, item, StatusEnum.in_progress)">
+                          <mat-icon aria-hidden="false" aria-label="Open Page With Details about activity">
+                            open_in_new
+                          </mat-icon>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div *ngIf="(isResolvedReady$ | async) === false" class="spinner-container">
+                <mat-spinner class="spinner" [diameter]="40"></mat-spinner>
+            </div>
+            <div class="example-container" [hidden]="(isResolvedReady$ | async) === false">
+                <h2>Resolved</h2>
+                <div
+                    cdkDropList
+                    #resolvedList="cdkDropList"
+                    [cdkDropListData]="(resolved | async)!"
+                    class="example-list"
+                    cdkDropListSortingDisabled
+                    (cdkDropListDropped)="drop($event, StatusEnum.resolved)">
+                    <div
+                        class="example-box"
+                        *ngFor="let item of resolved | async"
+                        cdkDrag
+                        [class.drag]="dragging"
+                        (cdkDragStarted)="handleDragStart($event)">
+                        {{ item.title }}
+                        <a (click)="openActivityDetails($event, item, StatusEnum.resolved)">
+                          <mat-icon aria-hidden="false" aria-label="Open Page With Details about activity">
+                            open_in_new
+                          </mat-icon>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #emptyContent>
+    <div style="text-align: center;">
+        Selecione a categoria e o tópico para exibir a lista de atividades presentes.
+    </div>
+</ng-template>
+
+<ng-template #snackBar>
+    Possam ser que suas mudanças ainda não tenham sido refletidas no histórico de atividades realizadas,
+    por existir pipeline em execução no momento. Por favor acompanhar no
+    <a href="pipelineUrl" target="_blank">repositório</a>.
+</ng-template>

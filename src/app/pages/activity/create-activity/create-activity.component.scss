@@ -1,0 +1,48 @@
+.full-width {
+    width: 100%;
+}
+
+.main-topic {
+    &__checked,
+    &__disabled {
+        visibility: hidden;
+    }
+
+    visibility: visible;
+    float: right;
+}
+
+.mat-option {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: space-around;
+
+    &:hover .main-topic__checked {
+        visibility: visible;
+        float: right;
+    }
+}
+
+.example-additional-selection {
+    opacity: 0.75;
+    font-size: 0.75em;
+}
+
+.hint-padding {
+    padding-bottom: 1.75em;
+}
+
+#description-error {
+    display: flex;
+    justify-content: space-between;
+}
+
+textarea {
+    min-height: 4vw;
+}
+
+.spinner {
+    z-index: 1;
+    margin: auto;
+}

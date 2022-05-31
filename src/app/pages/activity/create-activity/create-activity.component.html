@@ -1,0 +1,76 @@
+<div>
+    <h1 mat-dialog-title align="center">Cadastro de Atividade</h1>
+    <form [formGroup]="createActivityForm" class="container-fluid">
+        <mat-form-field class="full-width hint-padding">
+            <mat-label>Nome</mat-label>
+            <input matInput placeholder="Nome" required formControlName="name">
+            <mat-hint>Dê um nome novo a atividade</mat-hint>
+        </mat-form-field>
+        <div class="row">
+            <mat-form-field class="col">
+                <mat-label>Status</mat-label>
+                <mat-select #statusSelect
+                    formControlName="status"
+                    (selectionChange)="statusToggle($event)"
+                    required>
+                    <mat-option *ngFor="let status of statuses" [value]="status">
+                        {{ status }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field class="col">
+                <mat-label>Situação</mat-label>
+                <mat-select
+                    formControlName="situation"
+                    required>
+                    <mat-option *ngFor="let situation of situations" [value]="situation">
+                        {{ situation }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <mat-form-field class="full-width" *ngIf="statusSelect.value === 'Scheduled'">
+            <mat-label>Duração</mat-label>
+            <input type="time" matInput formControlName="duration"/>
+        </mat-form-field>
+        <mat-form-field class="full-width">
+            <mat-label>Categoria principal</mat-label>
+            <input type="text" matInput required formControlName="affected"/>
+        </mat-form-field>
+        <mat-form-field class="full-wdith pb-4">
+            <mat-label>Outras categorias relacionadas</mat-label>
+            <mat-select
+                formControlName="topics"
+                multiple>
+                    <mat-select-trigger>
+                        {{ createActivityForm.get('topics')?.value && createActivityForm.get('topics')?.value[0] ?
+                        createActivityForm.get('topics')?.value[0] : '' }}
+                        <span *ngIf="createActivityForm.get('topics')?.value?.length > 1" class="example-additional-selection">
+                            (+{{createActivityForm.get('topics')?.value.length - 1}} {{createActivityForm.get('topics')?.value.length === 2 ? 'outro' : 'outros'}})
+                        </span>
+                    </mat-select-trigger>
+                    <mat-option #matOption *ngFor="let topic of topics; let i = index" [value]="topic">
+                        {{ topic }}
+                    </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field class="full-width">
+            <mat-label>Descrição</mat-label>
+            <textarea #description
+                formControlName="description"
+                matInput
+                maxlength="255"
+                placeholder="Descreve os detalhes da atividade"
+                required></textarea>
+            <mat-hint align="end">{{ description.value.length }} / 255</mat-hint>
+        </mat-form-field>
+
+        <div mat-dialog-actions align="center">
+            <button mat-button mat-dialog-close>Fechar</button>
+            <button
+                [disabled]="disabled$ | async"
+                mat-button
+                (click)="createActivity()">Confirmar</button>
+        </div>
+    </form>
+</div>

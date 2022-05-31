@@ -25,14 +25,15 @@ module.exports = function (config) {
       suppressAll: true // removes the duplicated traces
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, './coverage/healthCheck'),
+      dir: require('path').join(__dirname, './coverage/activityTracker'),
       subdir: '.',
       reporters: [
-        { type: 'html' },
+        { type: 'html', subdir: 'report-html' },
         { type: 'text-summary' }
-      ]
+      ],
+      // fixWebpackSourcePaths: true
     },
-    reporters: ['progress', 'kjhtml'],
+    reporters: ['progress', 'kjhtml', 'coverage'],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
