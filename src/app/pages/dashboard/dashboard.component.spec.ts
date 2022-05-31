@@ -1,4 +1,5 @@
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { HarnessLoader } from '@angular/cdk/testing';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -36,7 +37,7 @@ describe('DashboardComponent', () => {
   });
 
   const matDialogStub = () => ({
-    open: (x: any, y: any) => Object.create(MatDialogRef)
+    open: (x: any, y: any) => TestBed.inject(MatDialogRef)
   });
 
   const activityServiceStub = () => ({
@@ -114,6 +115,31 @@ describe('DashboardComponent', () => {
 
       expect(component.dragging).toBeTruthy();
     });
+
+    it('should call method on element drag', waitForAsync(() => {
+      fixture.whenStable().then(() => {
+        fixture.detectChanges();
+
+        component.showContent = true;
+        component.toDo = of([{title: 'abc'} as any, { title: 'blabla' } as any]);
+        component.ongoing = of([{} as any, {} as any]);
+        component.resolved = of([{} as any, {} as any]);
+        spyOn(component, 'handleDragStart').and.callThrough();
+        spyOn(component, 'updateWithoutStatus').and.callFake(() => {});
+        spyOn(component, 'openActivityRegistrationDialog').and.callFake(() => {});
+
+        fixture.detectChanges();
+
+        const element = fixture.debugElement.query(By.css('.example-box'));
+        element.triggerEventHandler('cdkDragStarted', {});
+
+        fixture.detectChanges();
+
+        expect(component.handleDragStart).toHaveBeenCalled();
+        expect(component.dragging).toBeTruthy();
+        expect(element.nativeElement.classList).toContain('drag');
+      });
+    }));
   });
 
   describe('drop', () => {
@@ -184,7 +210,9 @@ describe('DashboardComponent', () => {
       fixture.whenStable().then(() => {
         spyOn(component, 'openActivityRegistrationDialog').and.callThrough();
         const dialog = TestBed.inject(MatDialog);
-        spyOn(dialog, 'open').and.stub();
+        const dialogRef = TestBed.inject(MatDialogRef);
+        spyOn(dialog, 'open').and.callFake(matDialogStub().open);
+        spyOn(dialogRef, 'afterClosed').and.callFake(matDialogRefStub().afterClosed);
 
         component.showContent = true;
         component.affected = 'work';
@@ -207,6 +235,7 @@ describe('DashboardComponent', () => {
 
         expect(component.openActivityRegistrationDialog).toHaveBeenCalledOnceWith(Status.to_do);
         expect(dialog.open).toHaveBeenCalledOnceWith(CreateActivityComponent, config);
+        expect(dialogRef.afterClosed).toHaveBeenCalled();
       });
     }));
   });
@@ -243,7 +272,9 @@ describe('DashboardComponent', () => {
       fixture.whenStable().then(() => {
         spyOn(component, 'updateWithoutStatus').and.callThrough();
         const dialog = TestBed.inject(MatDialog);
-        spyOn(dialog, 'open').and.stub();
+        const dialogRef = TestBed.inject(MatDialogRef);
+        spyOn(dialog, 'open').and.callFake(matDialogStub().open);
+        spyOn(dialogRef, 'afterClosed').and.callFake(matDialogRefStub().afterClosed);
 
         component.showContent = true;
         component.affected = 'work';
@@ -258,6 +289,7 @@ describe('DashboardComponent', () => {
 
         expect(component.updateWithoutStatus).toHaveBeenCalled();
         expect(dialog.open).toHaveBeenCalled();
+        expect(dialogRef.afterClosed).toHaveBeenCalled();
       });
     }));
   });
