@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Status } from "../enums/status.enum";
 import { CreateActivity } from "./create-activity";
-import { Activity } from "./activity";
 import { ActivityBuilder } from "./activity-builder";
 
 @Injectable({
@@ -75,7 +74,7 @@ ${this.getZeroPaddedDigit(date.getMinutes(), 2)}_${this.getZeroPaddedDigit(date.
 
     public build(): CreateActivity {
         const result: CreateActivity = this.activity;
-        
+
         this.reset();
 
         return result;

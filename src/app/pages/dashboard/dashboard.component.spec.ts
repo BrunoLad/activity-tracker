@@ -188,7 +188,7 @@ describe('DashboardComponent', () => {
 
         component.showContent = true;
         component.affected = 'work';
-        component.scheduled = of([{} as any, {} as any]);
+        component.toDo = of([{} as any, {} as any]);
         component.ongoing = of([{} as any, {} as any]);
         component.resolved = of([{} as any, {} as any]);
 
@@ -200,12 +200,12 @@ describe('DashboardComponent', () => {
         const config = {
           width: '50vw',
           data: {
-            status: Status.scheduled,
+            status: Status.to_do,
             mainAffected: component.affected
           }
         };
 
-        expect(component.openActivityRegistrationDialog).toHaveBeenCalledOnceWith(Status.scheduled);
+        expect(component.openActivityRegistrationDialog).toHaveBeenCalledOnceWith(Status.to_do);
         expect(dialog.open).toHaveBeenCalledOnceWith(CreateActivityComponent, config);
       });
     }));
@@ -247,7 +247,7 @@ describe('DashboardComponent', () => {
 
         component.showContent = true;
         component.affected = 'work';
-        component.scheduled = of([{} as any, {} as any]);
+        component.toDo = of([{} as any, {} as any]);
         component.ongoing = of([{} as any, {} as any]);
         component.resolved = of([{} as any, {} as any]);
 
@@ -296,7 +296,7 @@ describe('DashboardComponent', () => {
         spyOn(window, 'open');
         component.showContent = true;
         component.affected = 'work';
-        component.scheduled = of([{ fileName: 'aaa' } as any, {} as any]);
+        component.toDo = of([{ fileName: 'aaa' } as any, {} as any]);
         component.ongoing = of([{} as any, {} as any]);
         component.resolved = of([{} as any, {} as any]);
 
@@ -308,7 +308,7 @@ describe('DashboardComponent', () => {
         fixture.detectChanges();
 
         expect(window.open).toHaveBeenCalledOnceWith(
-          `${environment.activityTracker}/activities/work/scheduled/aaa/`,
+          `${environment.activityTracker}/activities/work/to_do/aaa/`,
           '_blank'
         );
       });

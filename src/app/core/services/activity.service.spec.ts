@@ -70,12 +70,12 @@ describe('ActivityService', () => {
     it('makes expected call', () => {
       const response = {};
       const topic = 'topic';
-      const status = 'scheduled';
+      const status = 'to do';
       const fileName = 'aaa.md';
 
       service.getActivity(topic, status, fileName).subscribe(res => {});
       const request = httpController.expectOne(
-        `${environment.apiUrl}/activities/item?topic=${topic}&status=${status}&fileName=${fileName}`);
+        `${environment.apiUrl}/activities/item?topic=${topic}&status=${encodeURIComponent(status)}&fileName=${fileName}`);
       expect(request.request.method).toBe('GET');
       request.flush(response);
 

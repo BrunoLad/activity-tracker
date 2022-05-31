@@ -37,33 +37,33 @@
 <div *ngIf="showContent; else emptyContent" class="container">
     <div class="row row-cols-3">
         <div class="col justify-content-between d-flex flex-column">
-            <div *ngIf="(isScheduledReady$ | async) === false" class="spinner-container">
+            <div *ngIf="(isToDoReady$ | async) === false" class="spinner-container">
                 <mat-spinner class="spinner" [diameter]="40"></mat-spinner>
             </div>
-            <div class="example-container" [hidden]="(isScheduledReady$ | async) === false">
-                <h2>Scheduled</h2>
+            <div class="example-container" [hidden]="(isToDoReady$ | async) === false">
+                <h2>To Do</h2>
                 <button
                     mat-raised-button
                     matTooltip="Criar uma nova atividade"
                     colar="primary"
                     class="addition-button"
-                    (click)="openActivityRegistrationDialog(StatusEnum.scheduled)"><strong>+</strong> Criar uma nova atividade</button>
+                    (click)="openActivityRegistrationDialog(StatusEnum.to_do)"><strong>+</strong> Criar uma nova atividade</button>
                 <div
                     cdkDropList
-                    #scheduledList="cdkDropList"
-                    [cdkDropListData]="(scheduled | async)!"
+                    #toDoList="cdkDropList"
+                    [cdkDropListData]="(toDo | async)!"
                     [cdkDropListConnectedTo]="[progressList, resolvedList]"
                     class="example-list"
-                    (cdkDropListDropped)="drop($event, StatusEnum.scheduled)">
+                    (cdkDropListDropped)="drop($event, StatusEnum.to_do)">
                     <div
                         class="example-box"
-                        *ngFor="let item of scheduled | async"
-                        (click)="updateWithoutStatus(item, StatusEnum.scheduled)"
+                        *ngFor="let item of toDo | async"
+                        (click)="updateWithoutStatus(item, StatusEnum.to_do)"
                         cdkDrag
                         [class.drag]="dragging"
                         (cdkDragStarted)="handleDragStart($event)">
                         {{ item.title }}
-                        <a (click)="openActivityDetails($event, item, StatusEnum.scheduled)">
+                        <a (click)="openActivityDetails($event, item, StatusEnum.to_do)">
                           <mat-icon aria-hidden="false" aria-label="Open Page With Details about activity">
                             open_in_new
                           </mat-icon>
