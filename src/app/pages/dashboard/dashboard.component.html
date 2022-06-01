@@ -8,7 +8,7 @@
             placeholder="Selecione a categoria"
             class="dashboard-select"
             (selectionChange)="getTopics($event)">
-            <mat-option *ngFor="let category of categories | async" [value]="category.name">{{ category.name }}</mat-option>
+            <mat-option *ngFor="let category of categories | async" [value]="category">{{ category.name }}</mat-option>
         </mat-select>
         <mat-select
             placeholder="Selecione o Tópico"
@@ -16,7 +16,7 @@
             [disabled]="!categorySelect.value"
             [class.dashboard-select-disabled]="!categorySelect.value"
             (selectionChange)="updateAffected($event)">
-            <mat-option *ngFor="let topic of topics | async" [value]="topic.name">{{ topic.name }}</mat-option>
+            <mat-option *ngFor="let topic of topics$ | async" [value]="topic.name">{{ topic.name }}</mat-option>
         </mat-select>
         <div class="right-aligned">
             <span style="padding-right: 30px;" class="mat-menu-trigger-container">

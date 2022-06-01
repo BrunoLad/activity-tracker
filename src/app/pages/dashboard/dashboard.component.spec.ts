@@ -25,6 +25,7 @@ import { UpdateActivityComponent } from '../activity/update-activity/update-acti
 
 import { DashboardComponent } from './dashboard.component';
 import { MatIconModule } from '@angular/material/icon';
+import { Category } from 'src/app/shared/models/category';
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
@@ -361,15 +362,26 @@ describe('DashboardComponent', () => {
   describe('getTopics', () => {
     it('should update topics list', done => {
       const filterService = TestBed.inject(FilterService);
-      const topics$: any = of({ name: 'work', topics: [{ name: 'task1' }, { name: 'task2' }] });
-      const expectedTopics = [{ name: 'task1' }, { name: 'task2' }];
+      const topics = [
+        { name: 'task1', id: 1, categoryId: 1 },
+        { name: 'task2', id: 2, categoryId: 1 }
+    ];
+      const topics$: any = of(topics);
+      const selectEvent: any = {
+        value: {
+          name: 'aaa',
+          id: 1,
+          _links: {}
+        } as Category
+      };
 
       spyOn(filterService, 'getTopicsByCategory').and.returnValue(topics$);
-      component.getTopics({ value: 'work' } as any);
+      component.getTopics(selectEvent);
 
       expect(component.topicsSelected).toBeFalsy();
-      component.topics.subscribe((value: Topic[]) => {
-        expect(value).toEqual(expectedTopics);
+      expect(filterService.getTopicsByCategory).toHaveBeenCalledOnceWith(selectEvent.value);
+      component.topics$.subscribe((value: Topic[]) => {
+        expect(value).toEqual(topics);
         done();
       });
     });

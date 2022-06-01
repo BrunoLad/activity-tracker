@@ -14,6 +14,7 @@ import { Topic } from 'src/app/shared/models/topic';
 import { environment } from 'src/environments/environment';
 import { CreateActivityComponent } from '../activity/create-activity/create-activity.component';
 import { UpdateActivityComponent } from '../activity/update-activity/update-activity.component';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
   selector: 'app-dashboard',
@@ -29,7 +30,7 @@ export class DashboardComponent implements OnDestroy {
   public affected!: string;
   public categories: Observable<Category[]> = this.filterService.getCategories();
   // public categories = of([{ name: 'abc' }, { name: 'def' }]);
-  public topics!: Observable<Topic[]>;
+  public topics$!: Observable<Topic[]>;
   public dragging = false;
   public pipelineUrl!: string;
   public completedActivitiesUrl!: string;
@@ -156,9 +157,9 @@ ${this.affected}/${Status[status]}/${activity.fileName.replace('.md', '').replac
       .pipe(share(), tap(() => this.isResolvedReady.next(true)));
   }
 
-  public getTopics(event: any): void {
+  public getTopics(event: MatSelectChange): void {
     this.topicsSelected = false;
-    this.topics = this.filterService.getTopicsByCategory(event.value).pipe(map(g => g.topics));
+    this.topics$ = this.filterService.getTopicsByCategory(event.value);
   }
 
   public getUsername(): string {

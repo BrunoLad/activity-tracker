@@ -1,6 +1,7 @@
-import { Topic } from "./topic";
+import { Link } from "./link";
 
 export interface Category {
-    name: string;
-    topics: Topic[];
+  id: number;
+  name: string;
+  _links: Record<string, Link>;
 }

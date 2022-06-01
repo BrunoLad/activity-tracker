@@ -1,0 +1,36 @@
+{
+  "categories": [
+    {
+      "id": 1,
+      "name": "work",
+      "_links": {
+        "topics": {
+          "rel": "",
+          "href": "categories/1/topics/"
+        }
+      }
+    }
+  ],
+  "topics": [
+      {
+        "id": 1,
+        "name": "Tasks",
+        "categoryId": 1
+      },
+      {
+        "id": 2,
+        "name": "Projects",
+        "categoryId": 1
+      },
+      {
+        "id": 3,
+        "name": "Meetings",
+        "categoryId": 1
+      },
+      {
+        "id": 4,
+        "name": "Studies",
+        "categoryId": 1
+      }
+  ]
+}

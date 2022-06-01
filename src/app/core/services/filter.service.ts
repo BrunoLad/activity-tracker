@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Category } from 'src/app/shared/models/category';
+import { Topic } from 'src/app/shared/models/topic';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -18,7 +19,7 @@ export class FilterService {
     return this.http.get<Category[]>(`${this.apiUrl}/categories`);
   }
 
-  public getTopicsByCategory(category: string): Observable<Category> {
-    return this.http.get<Category>(`${this.apiUrl}/categories/topics?category=${category}`);
+  public getTopicsByCategory(category: Category): Observable<Topic[]> {
+    return this.http.get<Topic[]>(`${this.apiUrl}${category._links['topics'].href}`);
   }
 }
