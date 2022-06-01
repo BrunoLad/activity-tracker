@@ -1,11 +1,10 @@
 import { HttpClient, HttpErrorResponse, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController, TestRequest } from '@angular/common/http/testing';
-import { discardPeriodicTasks, fakeAsync, flush, inject, TestBed, tick } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { IndividualConfig, ToastrService } from 'ngx-toastr';
-import { asyncScheduler } from 'rxjs';
 import { TokenService } from '../services/token.service';
 
 import { AuthInterceptor } from './auth.interceptor';
@@ -80,9 +79,10 @@ describe('AuthInterceptor', () => {
   it(`Given a valid url
   and auth token has expired or no token
   should redirect to login component
-  with returnUrl param`, fakeAsync(() => {
+  with returnUrl param`, done => {
     const httpClient = TestBed.inject(HttpClient);
     const router = TestBed.inject(Router);
+    const tokenService = TestBed.inject(TokenService);
 
     const unauthResponse = { type: 'ERROR', status: 401, statusText: 'Unauthorized'};
     const expectedRoute = ['/login'];
@@ -91,33 +91,31 @@ describe('AuthInterceptor', () => {
         returnUrl: '/somePath?action=ab&time=12:00'
       }
     };
-    let spy: jasmine.Spy;
-    tick();
 
-    httpClient.get('/data').subscribe({
-      next: (_) => {},
-      error: (err) => {
-        console.log(err);
-        flush();
-        tick(10000);
+    let spy: jasmine.Spy
+    router.routerState.snapshot.url = 'baseUrl/somePath?action=ab&time=12:00';
+
+    httpClient.get('/error').subscribe({
+      next: (response) => {
         spy = spyOn(router, 'navigate');
-        expect(err).toBeInstanceOf(HttpErrorResponse);
-
         expect(router.navigate).toHaveBeenCalled();
         const route = spy.calls.first().args[0];
         const param = spy.calls.first().args[1];
 
         expect(route).toBe(expectedRoute);
         expect(param).toBe(expectedParam);
-        discardPeriodicTasks();
+        spyOn(tokenService, 'decode').and.returnValue('');
+      },
+      error: (err) => {
+        expect(err).toBeInstanceOf(HttpErrorResponse);
+        done();
       }
     });
 
-    const request: TestRequest = httpController.expectOne('/data');
-    request.error(new ErrorEvent('unauthorized'), unauthResponse);
-    // request.flush({}, unauthResponse);
+    const request: TestRequest = httpController.expectOne('/error');
+    request.flush({}, unauthResponse);
     httpController.verify();
-  }));
+  });
 
   it('expect token gets injected', done => {
     const res = {};

@@ -36,7 +36,7 @@ describe('DashboardComponent', () => {
   });
 
   const matDialogStub = () => ({
-    open: (x: any, y: any) => Object.create(MatDialogRef)
+    open: (x: any, y: any) => TestBed.inject(MatDialogRef)
   });
 
   const activityServiceStub = () => ({
@@ -114,6 +114,31 @@ describe('DashboardComponent', () => {
 
       expect(component.dragging).toBeTruthy();
     });
+
+    it('should call method on element drag', waitForAsync(() => {
+      fixture.whenStable().then(() => {
+        fixture.detectChanges();
+
+        component.showContent = true;
+        component.toDo = of([{title: 'abc'} as any, { title: 'blabla' } as any]);
+        component.ongoing = of([{} as any, {} as any]);
+        component.resolved = of([{} as any, {} as any]);
+        spyOn(component, 'handleDragStart').and.callThrough();
+        spyOn(component, 'updateWithoutStatus').and.callFake(() => {});
+        spyOn(component, 'openActivityRegistrationDialog').and.callFake(() => {});
+
+        fixture.detectChanges();
+
+        const element = fixture.debugElement.query(By.css('.example-box'));
+        element.triggerEventHandler('cdkDragStarted', {});
+
+        fixture.detectChanges();
+
+        expect(component.handleDragStart).toHaveBeenCalled();
+        expect(component.dragging).toBeTruthy();
+        expect(element.nativeElement.classList).toContain('drag');
+      });
+    }));
   });
 
   describe('drop', () => {
@@ -184,11 +209,13 @@ describe('DashboardComponent', () => {
       fixture.whenStable().then(() => {
         spyOn(component, 'openActivityRegistrationDialog').and.callThrough();
         const dialog = TestBed.inject(MatDialog);
-        spyOn(dialog, 'open').and.stub();
+        const dialogRef = TestBed.inject(MatDialogRef);
+        spyOn(dialog, 'open').and.callFake(matDialogStub().open);
+        spyOn(dialogRef, 'afterClosed').and.callFake(matDialogRefStub().afterClosed);
 
         component.showContent = true;
         component.affected = 'work';
-        component.scheduled = of([{} as any, {} as any]);
+        component.toDo = of([{} as any, {} as any]);
         component.ongoing = of([{} as any, {} as any]);
         component.resolved = of([{} as any, {} as any]);
 
@@ -200,13 +227,14 @@ describe('DashboardComponent', () => {
         const config = {
           width: '50vw',
           data: {
-            status: Status.scheduled,
+            status: Status.to_do,
             mainAffected: component.affected
           }
         };
 
-        expect(component.openActivityRegistrationDialog).toHaveBeenCalledOnceWith(Status.scheduled);
+        expect(component.openActivityRegistrationDialog).toHaveBeenCalledOnceWith(Status.to_do);
         expect(dialog.open).toHaveBeenCalledOnceWith(CreateActivityComponent, config);
+        expect(dialogRef.afterClosed).toHaveBeenCalled();
       });
     }));
   });
@@ -243,11 +271,13 @@ describe('DashboardComponent', () => {
       fixture.whenStable().then(() => {
         spyOn(component, 'updateWithoutStatus').and.callThrough();
         const dialog = TestBed.inject(MatDialog);
-        spyOn(dialog, 'open').and.stub();
+        const dialogRef = TestBed.inject(MatDialogRef);
+        spyOn(dialog, 'open').and.callFake(matDialogStub().open);
+        spyOn(dialogRef, 'afterClosed').and.callFake(matDialogRefStub().afterClosed);
 
         component.showContent = true;
         component.affected = 'work';
-        component.scheduled = of([{} as any, {} as any]);
+        component.toDo = of([{} as any, {} as any]);
         component.ongoing = of([{} as any, {} as any]);
         component.resolved = of([{} as any, {} as any]);
 
@@ -258,6 +288,7 @@ describe('DashboardComponent', () => {
 
         expect(component.updateWithoutStatus).toHaveBeenCalled();
         expect(dialog.open).toHaveBeenCalled();
+        expect(dialogRef.afterClosed).toHaveBeenCalled();
       });
     }));
   });
@@ -296,7 +327,7 @@ describe('DashboardComponent', () => {
         spyOn(window, 'open');
         component.showContent = true;
         component.affected = 'work';
-        component.scheduled = of([{ fileName: 'aaa' } as any, {} as any]);
+        component.toDo = of([{ fileName: 'aaa' } as any, {} as any]);
         component.ongoing = of([{} as any, {} as any]);
         component.resolved = of([{} as any, {} as any]);
 
@@ -308,7 +339,7 @@ describe('DashboardComponent', () => {
         fixture.detectChanges();
 
         expect(window.open).toHaveBeenCalledOnceWith(
-          `${environment.activityTracker}/activities/work/scheduled/aaa/`,
+          `${environment.activityTracker}/activities/work/to_do/aaa/`,
           '_blank'
         );
       });

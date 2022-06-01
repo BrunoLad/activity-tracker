@@ -110,18 +110,18 @@ describe('CreateActivityComponent', () => {
   });
 
   describe('statusToggle', () => {
-    it('scheduled value selected', () => {
+    it('todo value selected', () => {
       spyOn(component.createActivityForm, 'get').withArgs('duration')
         .and.returnValue(new FormControl(''));
       spyOn(component.createActivityForm.get('duration')!, 'setValidators');
       spyOn(component.createActivityForm.get('duration')!, 'updateValueAndValidity');
 
-      component.statusToggle({ value: Status.scheduled });
+      component.statusToggle({ value: Status.to_do });
 
       expect(component.createActivityForm.get).toHaveBeenCalled();
       expect(component.createActivityForm.get('duration')?.setValidators)
         .toHaveBeenCalledWith(Validators.required);
-      
+
       expect(component.createActivityForm.get('duration')?.updateValueAndValidity)
         .toHaveBeenCalled();
     });
@@ -149,7 +149,7 @@ describe('CreateActivityComponent', () => {
       const spy = spyOn(BehaviorSubject.prototype, 'unsubscribe');
       spyOn(Subject.prototype, 'next');
       spyOn(Subject.prototype, 'complete');
-      
+
       component.ngOnDestroy();
 
       expect(spy).toHaveBeenCalledTimes(1);

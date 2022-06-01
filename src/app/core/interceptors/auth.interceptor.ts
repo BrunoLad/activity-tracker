@@ -8,7 +8,7 @@ import {
   HttpHeaders,
   HttpErrorResponse
 } from '@angular/common/http';
-import { catchError, EMPTY, Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { TokenService } from '../services/token.service';
 import { ToastrService } from 'ngx-toastr';
@@ -51,7 +51,7 @@ export class AuthInterceptor implements HttpInterceptor {
         .pipe();
   }
 
-  private handleError(error: any): typeof EMPTY {
+  private handleError(error: any) {
     const url: string = this.router.routerState.snapshot.url;
 
     if (error instanceof HttpErrorResponse) {
@@ -70,7 +70,7 @@ export class AuthInterceptor implements HttpInterceptor {
       }
     }
 
-    return EMPTY;
+    return throwError(() => error);
   }
 
   private openErrorDialog(msg: string) {

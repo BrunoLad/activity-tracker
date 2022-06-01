@@ -6,43 +6,6 @@
 
 @import '~bootstrap/dist/css/bootstrap.css';
 
-// @include mat-core();
-
-// $dark-text: #000;
-// $dark-primary-text: rgba($dark-text, 0.87);
-// $dark-accent-text: rgba($dark-primary-text, 0.54);
-// $dark-disabled-text: rgba($dark-primary-text, 0.38);
-// $dark-dividers: rgba($dark-primary-text, 0.12);
-// $dark-focused: rgba($dark-primary-text, 0.12);
-
-// $mat-light-theme-foreground: (
-//     base: black,
-//     divider: $dark-dividers,
-//     dividers: $dark-dividers,
-//     disabled: $dark-disabled-text,
-//     disabled-button: rgba($dark-text, 0.26),
-//     disabled-text: $dark-disabled-text,
-//     elevation: black,
-//     secondary-text: $dark-accent-text,
-//     hint-text: $dark-disabled-text,
-//     accent-text: $dark-accent-text,
-//     icon: $dark-accent-text,
-//     icons: $dark-accent-text,
-//     text: $dark-primary-text,
-//     slider-min: $dark-primary-text,
-//     slider-off: rgba($dark-text, 0.26),
-//     slider-off-active: $dark-disabled-text
-// );
-
-// body {
-//     --primary-color: #ffa500;
-//     --primary-lighter-color: #ffe4b3;
-//     --primary-darker-color: #ff8a00;
-//     --text-primary-color: #{$dark-primary-text};
-//     --text-primary-lighter-color: #{$dark-primary-text};
-//     --text-primary-darker-color: #{$dark-primary-text};
-// }
-
 // warn-theme
 body {
     --warn-color: #ff0000;
@@ -112,7 +75,7 @@ $light-theme: mat.define-light-theme((
     @include mat.core-color($light-theme);
     @include mat.button-color($light-theme);
 
-    @include mat.all-component-themes($light-theme);
+    @include mat.all-component-colors($light-theme);
 
     @mixin mix-toggle-button($light-theme) {
         $primary: map-get($light-theme, primary);
@@ -127,44 +90,3 @@ $light-theme: mat.define-light-theme((
     // @include angular-material-theme($theme);
     @include mix-toggle-button($light-theme);
 }
-
-// $mat-primary-palette: mat.$blue-grey-palette;
-
-// $mat-primary: (
-//     main: #ffa500,
-//     lighter: #ffe4b3,
-//     darker: #ff8a00,
-//     200: #ffa500, // For slide toggle
-//     contrast: (
-//         main: $dark-primary-text,
-//         lighter: $dark-primary-text,
-//         darker: $dark-primary-text,
-//     )
-// );
-
-// $theme-primary: mat-palette($mat-primary-palette, main, lighter, darker);
-
-// body {
-//     --accent-color: #000;
-//     --accent-lighter-color: #b3b3b3;
-//     --accent-darker-color: #000;
-//     --text-accent-color: #{$light-primary-text};
-//     --text-accent-lighter-color: #{$dark-primary-text};
-//     --text-accent-darker-color: #{$light-primary-text};
-// }
-
-// $mat-accent: (
-//     main: #000,
-//     lighter: #b3b3b3,
-//     darker: #000,
-//     200: #000,
-//     contrast: (
-//         main: $light-primary-text,
-//         lighter: $dark-primary-text,
-//         darker: $light-primary-text
-//     )
-// );
-
-// $theme-accent: mat-palette($mat-accent, main, lighter, darker);
-
-// $theme: mat-light-theme($theme-primary, $theme-accent, $theme-warn);

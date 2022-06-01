@@ -39,7 +39,7 @@ export class CreateActivityComponent implements OnInit, OnDestroy {
     private readonly activityService: ActivityService,
     private activityBuilder: CreateActivityBuilder
   ) {
-    if (data.status !== Status.scheduled) {
+    if (data.status !== Status.to_do) {
       this.createActivityForm.get('duration')!.setValidators(null);
     }
 
@@ -76,7 +76,7 @@ export class CreateActivityComponent implements OnInit, OnDestroy {
   public statusToggle(select: any): void {
     const durationControl = this.createActivityForm.get('duration');
 
-    if (select.value === Status.scheduled) {
+    if (select.value === Status.to_do) {
       durationControl?.setValidators(Validators.required);
     } else {
       this.createActivityForm.patchValue({ duration: '' });
@@ -89,7 +89,7 @@ export class CreateActivityComponent implements OnInit, OnDestroy {
   private buildActivity(): CreateActivity {
     const mainAffected = this.createActivityForm.get('affected')?.value;
     const status: string = this.createActivityForm.get('status')?.value;
-    const scheduledStatus: any = Status.scheduled;
+    const toDoStatus: any = Status.to_do;
 
     let activityBuilder = this.activityBuilder.setFileName(mainAffected)
       .setDescription(this.createActivityForm.get('description')?.value)
@@ -99,7 +99,7 @@ export class CreateActivityComponent implements OnInit, OnDestroy {
       // @ts-ignore
       .setStatus(Status[status]);
 
-    if (status === scheduledStatus) {
+    if (status === toDoStatus) {
       activityBuilder = activityBuilder.withDuration(this.createActivityForm.get('duration')?.value);
     }
 

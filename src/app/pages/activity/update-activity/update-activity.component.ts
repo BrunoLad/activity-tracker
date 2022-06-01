@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SituationMap } from 'src/app/shared/configs/activity/situationBack.config';
@@ -16,7 +16,7 @@ export class UpdateActivityComponent {
   public situations: string[];
   private readonly map: Map<string, string> = SituationMap;
   public activity: Partial<SelectedActivity>;
-  public readonly statuses = ['Scheduled', 'In Progress', 'Resolved'];
+  public readonly statuses = ['To Do', 'In Progress', 'Resolved'];
   public status: Status;
 
   public updateForm = new FormGroup({

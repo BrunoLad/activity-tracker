@@ -1,12 +1,10 @@
 import { CdkDragDrop, transferArrayItem } from '@angular/cdk/drag-drop';
-import { Component, OnDestroy, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { BehaviorSubject, defer, EMPTY, iif, interval, map, Observable, of, share, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { BehaviorSubject, defer, EMPTY, iif, map, Observable, share, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { FilterService } from 'src/app/core/services/filter.service';
-import { GitProjectService } from 'src/app/core/services/git-project.service';
 import { ActivityService } from 'src/app/core/services/activity.service';
 import { Status } from 'src/app/shared/enums/status.enum';
 import { Category } from 'src/app/shared/models/category';
@@ -33,34 +31,26 @@ export class DashboardComponent implements OnDestroy {
   // public categories = of([{ name: 'abc' }, { name: 'def' }]);
   public topics!: Observable<Topic[]>;
   public dragging = false;
-  private lastRunningReqs: boolean[] = [];
-  private runningSubscription: any;
-  private snackBarRef: any;
   public pipelineUrl!: string;
   public completedActivitiesUrl!: string;
 
   private isResolvedReady = new BehaviorSubject(false);
   public isResolvedReady$: Observable<boolean> = this.isResolvedReady.asObservable();
-  private isScheduledReady = new BehaviorSubject(false);
-  public isScheduledReady$: Observable<boolean> = this.isScheduledReady.asObservable();
+  private isToDoReady = new BehaviorSubject(false);
+  public isToDoReady$: Observable<boolean> = this.isToDoReady.asObservable();
   private isOngoingReady = new BehaviorSubject(false);
   public isOngoingReady$: Observable<boolean> = this.isOngoingReady.asObservable();
 
-  public scheduled: Observable<SelectedActivity[]> = EMPTY;
+  public toDo: Observable<SelectedActivity[]> = EMPTY;
   public ongoing: Observable<SelectedActivity[]> = EMPTY;
   public resolved: Observable<SelectedActivity[]> = EMPTY;
-
-  @ViewChild('snackBar')
-  snackBar!: TemplateRef<any>;
 
   constructor(
     private readonly activityService: ActivityService,
     private readonly filterService: FilterService,
     private readonly dialog: MatDialog,
     private readonly authService: AuthService,
-    private readonly router: Router,
-    private readonly _snackBar: MatSnackBar,
-    private readonly gitProjectService: GitProjectService
+    private readonly router: Router
   ) {
     this.pipelineUrl = environment.pipelineUrl;
     this.completedActivitiesUrl = environment.activityTracker;
@@ -153,13 +143,13 @@ ${this.affected}/${Status[status]}/${activity.fileName.replace('.md', '').replac
   public updateAffected($event?: any): void {
     this.isResolvedReady.next(false);
     this.isOngoingReady.next(false);
-    this.isScheduledReady.next(false);
+    this.isToDoReady.next(false);
 
     this.topicsSelected = true;
     this.showContent = true;
     this.affected = $event ? $event.value : this.affected;
-    this.scheduled = this.activityService.getActivities(this.affected, Status[Status.scheduled])
-      .pipe(share(), tap(() => this.isScheduledReady.next(true)));
+    this.toDo = this.activityService.getActivities(this.affected, Status[Status.to_do])
+      .pipe(share(), tap(() => this.isToDoReady.next(true)));
     this.ongoing = this.activityService.getActivities(this.affected, Status[Status.in_progress])
       .pipe(share(), tap(() => this.isOngoingReady.next(true)));
     this.resolved = this.activityService.getActivities(this.affected, Status[Status.resolved])

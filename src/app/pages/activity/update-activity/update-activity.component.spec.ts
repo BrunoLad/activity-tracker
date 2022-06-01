@@ -94,7 +94,7 @@ describe('UpdateActivityComponent', () => {
         component.updateForm.patchValue({
           description: 'a',
           situation: 'delayed',
-          status: Status.scheduled
+          status: Status.to_do
         });
         component.updateForm.updateValueAndValidity();
         fixture.detectChanges();

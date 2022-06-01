@@ -1,4 +1,4 @@
 export const statuses = [
-    'Scheduled',
+    'To Do',
     'In Progress'
 ];
