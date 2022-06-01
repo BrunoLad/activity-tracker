@@ -13,17 +13,11 @@ export class TokenService {
   }
 
   public isTokenValid() {
-    if (this.hasToken()) {
-      return this.jwtService.isTokenExpired(this.getToken());
-    }
-    return;
+      return this.hasToken() && this.jwtService.isTokenExpired(this.getToken());
   }
 
-  public getExpirationDate() {
-    if (this.hasToken()) {
-      return this.jwtService.getTokenExpirationDate(this.getToken());
-    }
-    return;
+  public getExpirationDate(): Date | null {
+    return this.jwtService.getTokenExpirationDate(this.getToken());
   }
 
   public decode() {
