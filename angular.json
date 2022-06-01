@@ -60,7 +60,42 @@
               ],
               "outputHashing": "all"
             },
+            "staging": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.stage.ts"
+                }
+              ],
+              "outputHashing": "all"
+            },
             "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.dev.ts"
+                }
+              ]
+            },
+            "localhost": {
               "buildOptimizer": false,
               "optimization": false,
               "vendorChunk": true,
@@ -77,11 +112,18 @@
             "production": {
               "browserTarget": "activityTracker:build:production"
             },
+            "staging": {
+              "browserTarget": "activityTracker:build:staging"
+            },
             "development": {
               "browserTarget": "activityTracker:build:development"
+            },
+            "localhost": {
+              "browserTarget": "activityTracker:build:localhost",
+              "proxyConfig": "src/proxy.conf.json"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "localhost"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
@@ -102,9 +144,12 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+            ]
           }
         },
         "lint": {
@@ -115,6 +160,9 @@
               "src/**/*.html"
             ]
           }
+        },
+        "deploy": {
+          "builder": "angular-cli-ghpages:deploy"
         }
       }
     }
