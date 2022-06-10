@@ -20,6 +20,6 @@ export class FilterService {
   }
 
   public getTopicsByCategory(category: Category): Observable<Topic[]> {
-    return this.http.get<Topic[]>(`${this.apiUrl}${category._links['topics'].href}`);
+    return this.http.get<Topic[]>(`${this.apiUrl}${category._links!['topics'].href}`);
   }
 }

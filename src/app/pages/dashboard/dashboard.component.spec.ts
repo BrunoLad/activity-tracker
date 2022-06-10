@@ -26,6 +26,7 @@ import { UpdateActivityComponent } from '../activity/update-activity/update-acti
 import { DashboardComponent } from './dashboard.component';
 import { MatIconModule } from '@angular/material/icon';
 import { Category } from 'src/app/shared/models/category';
+import { Activity } from 'src/app/shared/models/activity';
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
@@ -160,13 +161,17 @@ describe('DashboardComponent', () => {
         dropPoint: { x: 0, y: 0 }
       };
 
-      component.affected = 'work';
+      component.topic = {
+        id: 1,
+        categoryId: 1,
+        name: 'topic'
+      };
       const config = {
         width: '50vw',
         data: {
           activity: dragDrop.previousContainer.data[dragDrop.previousIndex],
           currentStatus: Status.in_progress,
-          mainAffected: component.affected
+          category: component.topic
         }
       };
 
@@ -189,12 +194,16 @@ describe('DashboardComponent', () => {
       spyOn(dialog, 'open').and.returnValue(dialogRef);
       spyOn(dialogRef, 'afterClosed').and.returnValue(of({}));
 
-      component.affected = 'work';
+      component.topic = {
+        id: 1,
+        categoryId: 1,
+        name: 'topic'
+      };
       const config = {
         width: '50vw',
         data: {
           status: Status.in_progress,
-          mainAffected: component.affected
+          category: component.topic
         }
       };
       component.openActivityRegistrationDialog(Status.in_progress);
@@ -215,7 +224,11 @@ describe('DashboardComponent', () => {
         spyOn(dialogRef, 'afterClosed').and.callFake(matDialogRefStub().afterClosed);
 
         component.showContent = true;
-        component.affected = 'work';
+        component.topic = {
+          id: 1,
+          categoryId: 1,
+          name: 'topic'
+        };
         component.toDo = of([{} as any, {} as any]);
         component.ongoing = of([{} as any, {} as any]);
         component.resolved = of([{} as any, {} as any]);
@@ -229,7 +242,7 @@ describe('DashboardComponent', () => {
           width: '50vw',
           data: {
             status: Status.to_do,
-            mainAffected: component.affected
+            category: component.topic
           }
         };
 
@@ -247,15 +260,19 @@ describe('DashboardComponent', () => {
       spyOn(dialog, 'open').and.returnValue(dialogRef);
       spyOn(dialogRef, 'afterClosed').and.returnValue(of({}));
 
-      component.affected = 'work';
-      const activity = {};
+      component.topic = {
+        id: 1,
+        categoryId: 1,
+        name: 'topic'
+      };
+      const activity = {} as Activity;
 
       const config = {
         width: '50vw',
         data: {
           activity: activity,
           currentStatus: Status.in_progress,
-          mainAffected: component.affected
+          category: component.topic
         }
       };
 
@@ -277,7 +294,11 @@ describe('DashboardComponent', () => {
         spyOn(dialogRef, 'afterClosed').and.callFake(matDialogRefStub().afterClosed);
 
         component.showContent = true;
-        component.affected = 'work';
+        component.topic = {
+          id: 1,
+          categoryId: 1,
+          name: 'topic'
+        };
         component.toDo = of([{} as any, {} as any]);
         component.ongoing = of([{} as any, {} as any]);
         component.resolved = of([{} as any, {} as any]);
@@ -295,16 +316,24 @@ describe('DashboardComponent', () => {
   });
 
   describe('openActivityDetails', () => {
+    beforeEach(() => {
+      spyOn(window, 'open');
+      component.showContent = true;
+      component.topic = {
+        id: 1,
+        categoryId: 1,
+        name: 'topic'
+      };
+    });
+
     it('should open past activities page url', () => {
       const activity: any = {
         fileName: 'abc'
       };
-      spyOn(window, 'open');
 
-      component.affected = 'work';
       component.openActivityDetails({ stopPropagation: () => {} } as any, activity, Status.in_progress);
       expect(window.open).toHaveBeenCalledOnceWith(
-        `${environment.activityTracker}/activities/work/in_progress/abc/`,
+        `${environment.activityTracker}/activities/topic/in_progress/abc/`,
         '_blank'
       );
     });
@@ -313,21 +342,17 @@ describe('DashboardComponent', () => {
       const activity: any = {
         fileName: '2021-01-01-08_20:00-work.md'
       };
-      spyOn(window, 'open');
 
-      component.affected = 'work';
       component.openActivityDetails({ stopPropagation: () => {} } as any, activity, Status.in_progress);
       expect(window.open).toHaveBeenCalledOnceWith(
-        `${environment.activityTracker}/activities/work/in_progress/2021-01-01-08_20_00-work/`,
+        `${environment.activityTracker}/activities/topic/in_progress/2021-01-01-08_20_00-work/`,
         '_blank'
       );
     });
 
     it('should generate appropriate url on element', waitForAsync(() => {
       fixture.whenStable().then(() => {
-        spyOn(window, 'open');
-        component.showContent = true;
-        component.affected = 'work';
+
         component.toDo = of([{ fileName: 'aaa' } as any, {} as any]);
         component.ongoing = of([{} as any, {} as any]);
         component.resolved = of([{} as any, {} as any]);
@@ -340,22 +365,22 @@ describe('DashboardComponent', () => {
         fixture.detectChanges();
 
         expect(window.open).toHaveBeenCalledOnceWith(
-          `${environment.activityTracker}/activities/work/to_do/aaa/`,
+          `${environment.activityTracker}/activities/topic/to_do/aaa/`,
           '_blank'
         );
       });
     }));
   });
 
-  describe('updateAffected', () => {
-    it('should update affected', () => {
+  describe('updateCategory', () => {
+    it('should update category', () => {
       const event: any = { value: 'work' };
 
-      component.updateAffected(event);
+      component.updateCategory(event);
 
       expect(component.topicsSelected).toBeTruthy();
       expect(component.showContent).toBeTruthy();
-      expect(component.affected).toBe(event.value);
+      expect(component.topic).toBe(event.value);
     });
   });
 

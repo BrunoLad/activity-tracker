@@ -1,6 +1,6 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { CreateActivity } from 'src/app/shared/models/create-activity';
+import { Activity } from 'src/app/shared/models/activity';
 import { environment } from 'src/environments/environment';
 
 import { ActivityService } from './activity.service';
@@ -26,7 +26,7 @@ describe('ActivityService', () => {
   describe('createActivity', () => {
     it('makes expected call', () => {
       const response = {};
-      const activity = new CreateActivity();
+      const activity = new Activity();
 
       service.createActivity(activity).subscribe(response => {});
       const request = httpController.expectOne(`${environment.apiUrl}/activities`);
@@ -54,11 +54,11 @@ describe('ActivityService', () => {
   describe('getActivities', () => {
     it('makes expected call', () => {
       const response = {};
-      const topic = 'topic';
+      const topic = 2;
       const status = 'in_progress';
 
       service.getActivities(topic, status).subscribe(response => {});
-      const request = httpController.expectOne(`${environment.apiUrl}/activities/all?status=${status}&topic=${topic}`);
+      const request = httpController.expectOne(`${environment.apiUrl}/activities?status=${status}&topicId=${topic}`);
       expect(request.request.method).toBe('GET');
       request.flush(response);
 

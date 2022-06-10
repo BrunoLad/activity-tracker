@@ -15,8 +15,8 @@
             class="dashboard-select"
             [disabled]="!categorySelect.value"
             [class.dashboard-select-disabled]="!categorySelect.value"
-            (selectionChange)="updateAffected($event)">
-            <mat-option *ngFor="let topic of topics$ | async" [value]="topic.name">{{ topic.name }}</mat-option>
+            (selectionChange)="updateCategory($event)">
+            <mat-option *ngFor="let topic of topics$ | async" [value]="topic">{{ topic.name }}</mat-option>
         </mat-select>
         <div class="right-aligned">
             <span style="padding-right: 30px;" class="mat-menu-trigger-container">

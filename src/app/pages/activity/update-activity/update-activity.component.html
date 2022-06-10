@@ -12,12 +12,12 @@
             </mat-select>
         </mat-form-field>
         <mat-form-field class="col">
-            <mat-label>Situaçao</mat-label>
+            <mat-label>Prioridade</mat-label>
             <mat-select
-                formControlName="situation"
+                formControlName="priority"
                 required>
-                <mat-option *ngFor="let situation of situations" [value]="situation">
-                    {{ situation }}
+                <mat-option *ngFor="let priority of priorities" [value]="priority">
+                    {{ priority }}
                 </mat-option>
             </mat-select>
         </mat-form-field>

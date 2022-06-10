@@ -1,11 +1,10 @@
 import { Component, Inject } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { SituationMap } from 'src/app/shared/configs/activity/situationBack.config';
 import { Status } from 'src/app/shared/enums/status.enum';
-import { SelectedActivity } from 'src/app/shared/models/selected-activity';
-import { UpdateActivityBuilder } from 'src/app/shared/models/update-activity-builder';
-import * as activityConfig from 'src/app/shared/configs/activity/activity';
+import { ActivityBuilder } from 'src/app/shared/models/activity-builder';
+import { Priority } from 'src/app/shared/enums/priority.enum';
+import { Activity } from 'src/app/shared/models/activity';
 
 @Component({
   selector: 'app-update-activity',
@@ -13,25 +12,24 @@ import * as activityConfig from 'src/app/shared/configs/activity/activity';
   styleUrls: ['./update-activity.component.scss']
 })
 export class UpdateActivityComponent {
-  public situations: string[];
-  private readonly map: Map<string, string> = SituationMap;
-  public activity: Partial<SelectedActivity>;
+  public priorities: string[];
+  public activity: Partial<Activity>;
   public readonly statuses = ['To Do', 'In Progress', 'Resolved'];
   public status: Status;
 
   public updateForm = new FormGroup({
     description: new FormControl(''),
-    situation: new FormControl('')
+    priority: new FormControl('')
   });
 
   constructor(
     public dialogRef: MatDialogRef<UpdateActivityComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private activityBuilder: UpdateActivityBuilder
+    private activityBuilder: ActivityBuilder
   ) {
     this.updateForm.addControl('status', new FormControl({ value: data.currentStatus, disadbled: true }));
 
-    this.situations = activityConfig.situations;
+    this.priorities = Object.values(Priority).filter(value => typeof value === 'string') as string[];
     this.activity = data.activity;
     this.status = data.status;
   }
@@ -48,14 +46,13 @@ export class UpdateActivityComponent {
 
   private buildActivity(): any {
     const status: string = this.updateForm.get('status')?.value;
+    const priority = Priority[this.updateForm.get('priority')?.value] as any;
 
-    const activityBuidler = this.activityBuilder.setFileName(this.activity.fileName!)
-      .setDescription(this.updateForm.get('description')?.value)
-      .setCurrentSeverity(this.map.get(this.updateForm.get('situation')?.value)!)
-      .setTopic(this.activity.affected![0])
-      .setCurrentStatus(this.activity.status!)
+    const activityBuidler = this.activityBuilder.setDescription(this.updateForm.get('description')?.value)
+      .setCurrentPriority(priority)
+      .setTopicId(this.activity.topicId!)
       // @ts-ignore
-      .setNewStatus(Status[status]);
+      .setStatus(Status[status]);
 
       return activityBuidler.build();
   }

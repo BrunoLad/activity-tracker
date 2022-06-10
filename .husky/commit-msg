@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# npx --no commitlint --edit ""
+
+python3 .husky/commit-msg.py $1
