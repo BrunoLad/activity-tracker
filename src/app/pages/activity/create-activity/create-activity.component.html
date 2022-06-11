@@ -19,12 +19,12 @@
                 </mat-select>
             </mat-form-field>
             <mat-form-field class="col">
-                <mat-label>Situação</mat-label>
+                <mat-label>Prioridade</mat-label>
                 <mat-select
-                    formControlName="situation"
+                    formControlName="priority"
                     required>
-                    <mat-option *ngFor="let situation of situations" [value]="situation">
-                        {{ situation }}
+                    <mat-option *ngFor="let priority of priorities" [value]="priority">
+                        {{ priority }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
@@ -35,7 +35,7 @@
         </mat-form-field>
         <mat-form-field class="full-width">
             <mat-label>Categoria principal</mat-label>
-            <input type="text" matInput required formControlName="affected"/>
+            <input type="text" matInput required formControlName="category"/>
         </mat-form-field>
         <mat-form-field class="full-wdith pb-4">
             <mat-label>Outras categorias relacionadas</mat-label>

@@ -8,9 +8,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Priority } from 'src/app/shared/enums/priority.enum';
 import { Status } from 'src/app/shared/enums/status.enum';
-import { UpdateActivity } from 'src/app/shared/models/update-activity';
-import { UpdateActivityBuilder } from 'src/app/shared/models/update-activity-builder';
+import { Activity } from 'src/app/shared/models/activity';
+import { ActivityBuilder } from 'src/app/shared/models/activity-builder';
 
 import { UpdateActivityComponent } from './update-activity.component';
 
@@ -36,8 +37,8 @@ describe('UpdateActivityComponent', () => {
       ],
       providers: [
         { provide: MatDialogRef, useFactory: matDialogRefStub },
-        { provide: MAT_DIALOG_DATA, useValue: { activity: new UpdateActivity(), status: 'In Progress' } },
-        { provide: UpdateActivityBuilder, useValue: UpdateActivityBuilder.init() }
+        { provide: MAT_DIALOG_DATA, useValue: { activity: new Activity(), status: 'In Progress' } },
+        { provide: ActivityBuilder, useValue: ActivityBuilder.init() }
       ]
     })
     .compileComponents();
@@ -67,17 +68,18 @@ describe('UpdateActivityComponent', () => {
 
   describe('updateActivity', () => {
     it('should close dialog with new activity object', () => {
-      const builder = TestBed.inject(UpdateActivityBuilder);
+      const builder = TestBed.inject(ActivityBuilder);
       component.activity = {
-        affected: []
+        watchers: [],
+        topicId: 1
       };
 
       spyOn(component.dialogRef, 'close');
-      spyOn(builder, 'build').and.returnValue(new UpdateActivity());
+      spyOn(builder, 'build').and.returnValue(new Activity());
 
       component.updateActivity();
 
-      expect(component.dialogRef.close).toHaveBeenCalledOnceWith(new UpdateActivity());
+      expect(component.dialogRef.close).toHaveBeenCalledOnceWith(new Activity());
     });
   });
 
@@ -93,7 +95,7 @@ describe('UpdateActivityComponent', () => {
         spyOn(component, 'updateActivity');
         component.updateForm.patchValue({
           description: 'a',
-          situation: 'delayed',
+          priority: Priority.MEDIUM,
           status: Status.to_do
         });
         component.updateForm.updateValueAndValidity();

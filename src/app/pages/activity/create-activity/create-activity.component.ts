@@ -3,11 +3,11 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BehaviorSubject, delay, Observable, Subject, takeUntil } from 'rxjs';
 import { ActivityService } from 'src/app/core/services/activity.service';
-import { SituationMap } from 'src/app/shared/configs/activity/situationBack.config';
 import { Status } from 'src/app/shared/enums/status.enum';
-import { CreateActivityBuilder } from 'src/app/shared/models/create-activity-builder';
 import * as activityConfig from 'src/app/shared/configs/activity/activity';
-import { CreateActivity } from 'src/app/shared/models/create-activity';
+import { Priority } from 'src/app/shared/enums/priority.enum';
+import { ActivityBuilder } from 'src/app/shared/models/activity-builder';
+import { Activity } from 'src/app/shared/models/activity';
 
 @Component({
   selector: 'app-create-activity',
@@ -21,15 +21,14 @@ export class CreateActivityComponent implements OnInit, OnDestroy {
   // https://blog.angular-university.io/angular-debugging/
   public disabled$: Observable<boolean> = this.disabledSubject$.asObservable().pipe(delay(0));
   public statuses: string[];
-  public situations: string[];
+  public priorities: string[];
   public topics: string[];
-  private readonly map: Map<string, string> = SituationMap;
 
   public createActivityForm = new FormGroup({
     topics: new FormControl(''),
     name: new FormControl(''),
     description: new FormControl(''),
-    situation: new FormControl(''),
+    priority: new FormControl(''),
     duration: new FormControl('', Validators.required)
   });
 
@@ -37,19 +36,19 @@ export class CreateActivityComponent implements OnInit, OnDestroy {
     public dialogRef: MatDialogRef<CreateActivityComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private readonly activityService: ActivityService,
-    private activityBuilder: CreateActivityBuilder
+    private activityBuilder: ActivityBuilder
   ) {
     if (data.status !== Status.to_do) {
       this.createActivityForm.get('duration')!.setValidators(null);
     }
 
     this.createActivityForm.addControl('status', new FormControl(data.status));
-    this.createActivityForm.addControl('affected', new FormControl({ value: data.mainAffected, disabled: true }));
+    this.createActivityForm.addControl('category', new FormControl({ value: data.category.name, disabled: true }));
 
     // Initialize form fields using config files
     this.statuses = activityConfig.statuses;
-    this.situations = activityConfig.situations;
-    this.topics = activityConfig.topics.filter(topic => topic.toUpperCase() !== data.mainAffected.toUpperCase());
+    this.priorities = Object.values(Priority).filter(value => typeof value === 'string') as string[];
+    this.topics = activityConfig.topics.filter(topic => topic.toUpperCase() !== data.category.name.toUpperCase());
   }
 
   ngOnInit(): void {
@@ -60,7 +59,7 @@ export class CreateActivityComponent implements OnInit, OnDestroy {
   }
 
   public createActivity(): void {
-    const activity: CreateActivity = this.buildActivity();
+    const activity: Activity = this.buildActivity();
 
     this.activityService.createActivity(activity)
       .pipe(takeUntil(this.unsubscribe$))
@@ -86,25 +85,25 @@ export class CreateActivityComponent implements OnInit, OnDestroy {
     durationControl?.updateValueAndValidity();
   }
 
-  private buildActivity(): CreateActivity {
-    const mainAffected = this.createActivityForm.get('affected')?.value;
+  private buildActivity(): Activity {
+    const category = this.createActivityForm.get('category')?.value;
     const status: string = this.createActivityForm.get('status')?.value;
     const toDoStatus: any = Status.to_do;
+    const priority = Priority[this.createActivityForm.get('priority')?.value] as any;
 
-    let activityBuilder = this.activityBuilder.setFileName(mainAffected)
-      .setDescription(this.createActivityForm.get('description')?.value)
+    let activityBuilder = this.activityBuilder.setDescription(this.createActivityForm.get('description')?.value)
       .setTitle(this.createActivityForm.get('name')?.value)
-      .setAffected(mainAffected)
-      .setCurrentSeverity(this.map.get(this.createActivityForm.get('situation')?.value)!)
+      .setTopicId(category)
+      .setCurrentPriority(priority)
       // @ts-ignore
       .setStatus(Status[status]);
 
     if (status === toDoStatus) {
-      activityBuilder = activityBuilder.withDuration(this.createActivityForm.get('duration')?.value);
+      activityBuilder = activityBuilder.withEstimatedTime(this.createActivityForm.get('duration')?.value);
     }
 
     if (this.createActivityForm.get('topics')?.value) {
-      activityBuilder = activityBuilder.withOthersAffected(this.createActivityForm.get('topics')?.value);
+      // activityBuilder = activityBuilder.withOthersAffected(this.createActivityForm.get('topics')?.value);
     }
 
     const data = activityBuilder.build();

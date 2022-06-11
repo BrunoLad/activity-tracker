@@ -10,8 +10,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BehaviorSubject, of, Subject } from 'rxjs';
 import { ActivityService } from 'src/app/core/services/activity.service';
 import { Status } from 'src/app/shared/enums/status.enum';
-import { CreateActivity } from 'src/app/shared/models/create-activity';
-import { CreateActivityBuilder } from 'src/app/shared/models/create-activity-builder';
+import { Activity } from 'src/app/shared/models/activity';
+import { ActivityBuilder } from 'src/app/shared/models/activity-builder';
 
 import { CreateActivityComponent } from './create-activity.component';
 
@@ -21,7 +21,7 @@ describe('CreateActivityComponent', () => {
 
   const matDialogRefStub = () => ({ close: () => ({}) });
   const activityServiceStub = () => ({
-    createActivity: (activity: CreateActivity) => of(new CreateActivity())
+    createActivity: (activity: Activity) => of(new Activity())
   });
 
   beforeEach(async () => {
@@ -38,10 +38,10 @@ describe('CreateActivityComponent', () => {
         BrowserAnimationsModule
       ],
       providers: [
-        { provide: MAT_DIALOG_DATA, useValue: { mainAffected: 'aaa' } },
+        { provide: MAT_DIALOG_DATA, useValue: { category: { id: 1, name: 'aaa', categoryId: 1 } } },
         { provide: MatDialogRef, useFactory: matDialogRefStub },
         { provide: ActivityService, useFactory: activityServiceStub },
-        { provide: CreateActivityBuilder, useValue: CreateActivityBuilder.init() }
+        { provide: ActivityBuilder, useValue: ActivityBuilder.init() }
       ]
     })
     .compileComponents();
@@ -84,10 +84,10 @@ describe('CreateActivityComponent', () => {
   describe('createActivity', () => {
     it('should verify method for normal call', () => {
       const service = TestBed.inject(ActivityService);
-      const builder = TestBed.inject(CreateActivityBuilder);
+      const builder = TestBed.inject(ActivityBuilder);
 
-      spyOn(service, 'createActivity').and.returnValue(of(new CreateActivity()));
-      spyOn(builder, 'withOthersAffected').and.returnValue(builder);
+      spyOn(service, 'createActivity').and.returnValue(of(new Activity()));
+      // spyOn(builder, 'withOthersAffected').and.returnValue(builder);
       component.createActivity();
 
       expect(service.createActivity).toHaveBeenCalled();
@@ -95,17 +95,17 @@ describe('CreateActivityComponent', () => {
 
     it('should close dialog', fakeAsync(() => {
       const service = TestBed.inject(ActivityService);
-      const builder = TestBed.inject(CreateActivityBuilder);
+      const builder = TestBed.inject(ActivityBuilder);
 
-      spyOn(service, 'createActivity').and.returnValue(of(new CreateActivity()));
-      spyOn(builder, 'withOthersAffected').and.returnValue(builder);
+      spyOn(service, 'createActivity').and.returnValue(of(new Activity()));
+      // spyOn(builder, 'withOthersAffected').and.returnValue(builder);
       spyOn(component.dialogRef, 'close');
 
       component.createActivity();
 
       tick(1);
 
-      expect(component.dialogRef.close).toHaveBeenCalledWith(new CreateActivity());
+      expect(component.dialogRef.close).toHaveBeenCalledWith(new Activity());
     }));
   });
 

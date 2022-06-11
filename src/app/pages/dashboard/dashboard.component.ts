@@ -9,11 +9,11 @@ import { ActivityService } from 'src/app/core/services/activity.service';
 import { Status } from 'src/app/shared/enums/status.enum';
 import { Category } from 'src/app/shared/models/category';
 import { Activity } from 'src/app/shared/models/activity';
-import { SelectedActivity } from 'src/app/shared/models/selected-activity';
 import { Topic } from 'src/app/shared/models/topic';
 import { environment } from 'src/environments/environment';
 import { CreateActivityComponent } from '../activity/create-activity/create-activity.component';
 import { UpdateActivityComponent } from '../activity/update-activity/update-activity.component';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
   selector: 'app-dashboard',
@@ -26,10 +26,10 @@ export class DashboardComponent implements OnDestroy {
   public showContent = false;
   public topicsSelected = false;
   private unsubscribe$ = new Subject();
-  public affected!: string;
+  public topic: Topic = {} as Topic;
   public categories: Observable<Category[]> = this.filterService.getCategories();
   // public categories = of([{ name: 'abc' }, { name: 'def' }]);
-  public topics!: Observable<Topic[]>;
+  public topics$!: Observable<Topic[]>;
   public dragging = false;
   public pipelineUrl!: string;
   public completedActivitiesUrl!: string;
@@ -41,9 +41,9 @@ export class DashboardComponent implements OnDestroy {
   private isOngoingReady = new BehaviorSubject(false);
   public isOngoingReady$: Observable<boolean> = this.isOngoingReady.asObservable();
 
-  public toDo: Observable<SelectedActivity[]> = EMPTY;
-  public ongoing: Observable<SelectedActivity[]> = EMPTY;
-  public resolved: Observable<SelectedActivity[]> = EMPTY;
+  public toDo: Observable<Activity[]> = EMPTY;
+  public ongoing: Observable<Activity[]> = EMPTY;
+  public resolved: Observable<Activity[]> = EMPTY;
 
   constructor(
     private readonly activityService: ActivityService,
@@ -64,14 +64,14 @@ export class DashboardComponent implements OnDestroy {
     this.dragging = true;
   }
 
-  public drop(event: CdkDragDrop<SelectedActivity[]>, currentStatus: Status): void {
+  public drop(event: CdkDragDrop<Activity[]>, currentStatus: Status): void {
     const updateActivityConfig = {
       width: '50vw',
       data: {
         // pastStatus is already part of activity object
         activity: event.previousContainer.data[event.previousIndex],
         currentStatus,
-        mainAffected: this.affected
+        category: this.topic
       }
     };
 
@@ -94,14 +94,14 @@ export class DashboardComponent implements OnDestroy {
   }
 
   public openActivityRegistrationDialog(status: Status): void {
-    const activityConfig = { width: '50vw', data: { status, mainAffected: this.affected } };
+    const activityConfig = { width: '50vw', data: { status, category: this.topic } };
     const activityDialogRef = this.dialog.open(CreateActivityComponent, activityConfig);
 
     activityDialogRef.afterClosed().pipe(
       takeUntil(this.unsubscribe$)
     ).subscribe(response => {
       if (response) {
-        this.updateAffected();
+        this.updateCategory();
       }
     });
   }
@@ -118,7 +118,7 @@ export class DashboardComponent implements OnDestroy {
         // pastStatus is already part of activity object
         activity: activity,
         currentStatus,
-        mainAffected: this.affected
+        category: this.topic
       }
     };
 
@@ -131,7 +131,7 @@ export class DashboardComponent implements OnDestroy {
 
   public openActivityDetails($event: any, activity: any, status: Status): void {
     const url = `${this.completedActivitiesUrl}/activities/\
-${this.affected}/${Status[status]}/${activity.fileName.replace('.md', '').replace(/[:]/g, '_')}/`.toLowerCase();
+${this.topic.name}/${Status[status]}/${activity.fileName.replace('.md', '').replace(/[:]/g, '_')}/`.toLowerCase();
 
     window.open(url,
       '_blank'
@@ -140,25 +140,25 @@ ${this.affected}/${Status[status]}/${activity.fileName.replace('.md', '').replac
     $event.stopPropagation();
   }
 
-  public updateAffected($event?: any): void {
+  public updateCategory($event?: any): void {
     this.isResolvedReady.next(false);
     this.isOngoingReady.next(false);
     this.isToDoReady.next(false);
 
     this.topicsSelected = true;
     this.showContent = true;
-    this.affected = $event ? $event.value : this.affected;
-    this.toDo = this.activityService.getActivities(this.affected, Status[Status.to_do])
+    this.topic = $event ? $event.value : this.topic;
+    this.toDo = this.activityService.getActivities(this.topic.id, Status[Status.to_do])
       .pipe(share(), tap(() => this.isToDoReady.next(true)));
-    this.ongoing = this.activityService.getActivities(this.affected, Status[Status.in_progress])
+    this.ongoing = this.activityService.getActivities(this.topic.id, Status[Status.in_progress])
       .pipe(share(), tap(() => this.isOngoingReady.next(true)));
-    this.resolved = this.activityService.getActivities(this.affected, Status[Status.resolved])
+    this.resolved = this.activityService.getActivities(this.topic.id, Status[Status.resolved])
       .pipe(share(), tap(() => this.isResolvedReady.next(true)));
   }
 
-  public getTopics(event: any): void {
+  public getTopics(event: MatSelectChange): void {
     this.topicsSelected = false;
-    this.topics = this.filterService.getTopicsByCategory(event.value).pipe(map(g => g.topics));
+    this.topics$ = this.filterService.getTopicsByCategory(event.value);
   }
 
   public getUsername(): string {

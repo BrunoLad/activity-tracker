@@ -1,9 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CreateActivity } from 'src/app/shared/models/create-activity';
-import { SelectedActivity } from 'src/app/shared/models/selected-activity';
-import { UpdateActivity } from 'src/app/shared/models/update-activity';
+import { Activity } from 'src/app/shared/models/activity';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -18,23 +16,23 @@ export class ActivityService {
     this.api = environment.apiUrl;
   }
 
-  public createActivity(activity: CreateActivity): Observable<CreateActivity> {
-    return this.httpClient.post<CreateActivity>(`${this.api}/activities`, activity);
+  public createActivity(activity: Activity): Observable<Activity> {
+    return this.httpClient.post<Activity>(`${this.api}/activities`, activity);
   }
 
-  public updateActivity(activity: any): Observable<UpdateActivity> {
-    return this.httpClient.put<UpdateActivity>(`${this.api}/activities`, activity);
+  public updateActivity(activity: any): Observable<Activity> {
+    return this.httpClient.put<Activity>(`${this.api}/activities`, activity);
   }
 
-  public getActivities(topic: string, status: any): Observable<SelectedActivity[]> {
+  public getActivities(topic: number, status: any): Observable<Activity[]> {
     const params = new HttpParams()
       .set('status', status)
-      .set('topic', topic);
-    
-    return this.httpClient.get<SelectedActivity[]>(`${this.api}/activities/all`, { params });
+      .set('topicId', topic);
+
+    return this.httpClient.get<Activity[]>(`${this.api}/activities`, { params });
   }
 
-  public getActivity(topic: string, status: any, fileName: string): Observable<SelectedActivity> {
+  public getActivity(topic: string, status: any, fileName: string): Observable<Activity> {
     const params = new HttpParams({
       fromObject: {
         topic,
@@ -43,6 +41,6 @@ export class ActivityService {
       }
     });
 
-    return this.httpClient.get<SelectedActivity>(`${this.api}/activities/item`, { params });
+    return this.httpClient.get<Activity>(`${this.api}/activities/item`, { params });
   }
 }

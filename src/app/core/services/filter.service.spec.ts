@@ -1,5 +1,6 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { Category } from 'src/app/shared/models/category';
 import { environment } from 'src/environments/environment';
 
 import { FilterService } from './filter.service';
@@ -39,10 +40,18 @@ describe('FilterService', () => {
   describe('getTopicsByCategory', () => {
     it('should make expected call', () => {
       const response = {};
-      const category = 'category';
+      const category: Category = {
+        _links: {
+          'topics': {
+            href: '/path/to'
+          },
+        },
+        id: 1,
+        name: 'category'
+      };
 
       service.getTopicsByCategory(category).subscribe(res => {});
-      const request = httpController.expectOne(`${environment.apiUrl}/categories/topics?category=${category}`);
+      const request = httpController.expectOne(`${environment.apiUrl}/path/to`);
       expect(request.request.method).toEqual('GET');
       request.flush(response);
 

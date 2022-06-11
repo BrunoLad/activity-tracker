@@ -1,3 +1,5 @@
 export interface Topic {
-    name: string;
+	id: number;
+	name: string;
+	categoryId: number;
 }
