@@ -15,11 +15,12 @@ print("commit-msg: On branch '%s'" % branch)
 
 # Defines rule for Subject line based on
 # https://cbea.ms/git-commit/
-required_message = r"^[A-Z].{1,48}[^\.]$\n\n"
+sub_pattern = r'^[A-Z][^\.\n]{2,49}'
+required_message = r'{0}$|{0}'.format(sub_pattern) + r'\n{2}.+'
 
 with open(commit_msg_filepath, 'r') as f:
     content = f.read()
-    if not re.match(required_message, content, re.MULTILINE):
+    if not re.match(required_message, content):
         print('commit-msg: ERROR! The commit must have a header and it must be between 3 and 50 characters long')
         print('The informed commit message does not fit this criteria')
         sys.exit(1)
