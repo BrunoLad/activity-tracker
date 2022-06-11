@@ -10,17 +10,6 @@
       "string": [
         "work"
       ]
-    },
-    "_links": {
-      "string": [
-        "topic"
-      ],
-      "rel": {
-        "string": [
-          ""
-        ]
-      },
-      "href": "categories/1/topics/"
     }
   }
 }
