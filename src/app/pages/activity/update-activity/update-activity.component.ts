@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Status } from 'src/app/shared/enums/status.enum';
 import { ActivityBuilder } from 'src/app/shared/models/activity-builder';
@@ -17,9 +17,9 @@ export class UpdateActivityComponent {
   public readonly statuses = ['To Do', 'In Progress', 'Resolved'];
   public status: Status;
 
-  public updateForm = new FormGroup({
-    description: new FormControl(''),
-    priority: new FormControl('')
+  public updateForm = new UntypedFormGroup({
+    description: new UntypedFormControl(''),
+    priority: new UntypedFormControl('')
   });
 
   constructor(
@@ -27,7 +27,7 @@ export class UpdateActivityComponent {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private activityBuilder: ActivityBuilder
   ) {
-    this.updateForm.addControl('status', new FormControl({ value: data.currentStatus, disadbled: true }));
+    this.updateForm.addControl('status', new UntypedFormControl({ value: data.currentStatus, disadbled: true }));
 
     this.priorities = Object.values(Priority).filter(value => typeof value === 'string') as string[];
     this.activity = data.activity;

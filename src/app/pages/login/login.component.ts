@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/core/services/auth.service';
@@ -12,7 +12,7 @@ import { User } from 'src/app/shared/models/user';
 	styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-	public loginForm: FormGroup;
+	public loginForm: UntypedFormGroup;
 	public submitted: boolean;
 	public typeWriterText = 'Activity Tracker';
 	public typeWriterDisplay = '';
@@ -24,7 +24,7 @@ export class LoginComponent implements OnInit {
 	}
 
 	constructor(
-		private readonly fb: FormBuilder,
+		private readonly fb: UntypedFormBuilder,
 		private readonly authService: AuthService,
 		private readonly router: Router,
 		private readonly toastr: ToastrService,

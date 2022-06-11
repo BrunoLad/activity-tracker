@@ -1,5 +1,5 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BehaviorSubject, delay, Observable, Subject, takeUntil } from 'rxjs';
 import { ActivityService } from 'src/app/core/services/activity.service';
@@ -24,12 +24,12 @@ export class CreateActivityComponent implements OnInit, OnDestroy {
   public priorities: string[];
   public topics: string[];
 
-  public createActivityForm = new FormGroup({
-    topics: new FormControl(''),
-    name: new FormControl(''),
-    description: new FormControl(''),
-    priority: new FormControl(''),
-    duration: new FormControl('', Validators.required)
+  public createActivityForm = new UntypedFormGroup({
+    topics: new UntypedFormControl(''),
+    name: new UntypedFormControl(''),
+    description: new UntypedFormControl(''),
+    priority: new UntypedFormControl(''),
+    duration: new UntypedFormControl('', Validators.required)
   });
 
   constructor(
@@ -42,8 +42,8 @@ export class CreateActivityComponent implements OnInit, OnDestroy {
       this.createActivityForm.get('duration')!.setValidators(null);
     }
 
-    this.createActivityForm.addControl('status', new FormControl(data.status));
-    this.createActivityForm.addControl('category', new FormControl({ value: data.category.name, disabled: true }));
+    this.createActivityForm.addControl('status', new UntypedFormControl(data.status));
+    this.createActivityForm.addControl('category', new UntypedFormControl({ value: data.category.name, disabled: true }));
 
     // Initialize form fields using config files
     this.statuses = activityConfig.statuses;
