@@ -15,7 +15,7 @@ print("commit-msg: On branch '%s'" % branch)
 
 # Defines rule for Subject line based on
 # https://cbea.ms/git-commit/
-sub_pattern = r'^[A-Z][^\.\n]{2,49}'
+sub_pattern = r'^[A-Z][^\n]{2,48}[^\.]'
 required_message = r'{0}$|{0}'.format(sub_pattern) + r'\n{2}.+'
 
 with open(commit_msg_filepath, 'r') as f:
