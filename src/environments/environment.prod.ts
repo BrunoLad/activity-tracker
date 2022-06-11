@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: "https://mockend.com/org/repo",
+  apiUrl: "https://mockend.com/BrunoLad/activity-tracker",
   activityTracker: "",
   loginUrl: "",
   pipelineUrl: ""
