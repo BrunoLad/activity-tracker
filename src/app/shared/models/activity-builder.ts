@@ -69,9 +69,11 @@ export class ActivityBuilder extends Builder<Activity> {
     return this;
   }
 
-  public withEstimatedTime(time: number): ActivityBuilder {
+  public withEstimatedTime(time: string): ActivityBuilder {
     const refDate = new Date(0);
-    refDate.setTime(refDate.getTime() + time);
+    const splitDate = time.split(':');
+    const parsedTime = +splitDate[0] * 3600000 + +splitDate[1] * 60000;
+    refDate.setTime(refDate.getTime() + parsedTime);
     this.activity.estimatedTime = refDate;
     return this;
   }

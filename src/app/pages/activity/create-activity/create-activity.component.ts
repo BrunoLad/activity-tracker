@@ -1,5 +1,5 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BehaviorSubject, delay, Observable, Subject, takeUntil } from 'rxjs';
 import { ActivityService } from 'src/app/core/services/activity.service';
@@ -8,6 +8,7 @@ import * as activityConfig from 'src/app/shared/configs/activity/activity';
 import { Priority } from 'src/app/shared/enums/priority.enum';
 import { ActivityBuilder } from 'src/app/shared/models/activity-builder';
 import { Activity } from 'src/app/shared/models/activity';
+import { CreateActivityForm } from 'src/app/shared/models/create-activity-form';
 
 @Component({
   selector: 'app-create-activity',
@@ -23,13 +24,15 @@ export class CreateActivityComponent implements OnInit, OnDestroy {
   public statuses: string[];
   public priorities: string[];
   public topics: string[];
+  public topic;
 
-  public createActivityForm = new UntypedFormGroup({
-    topics: new UntypedFormControl(''),
-    name: new UntypedFormControl(''),
-    description: new UntypedFormControl(''),
-    priority: new UntypedFormControl(''),
-    duration: new UntypedFormControl('', Validators.required)
+  public createActivityForm = new FormGroup<CreateActivityForm>({
+    topics: new FormControl([], { nonNullable: true }),
+    name: new FormControl('', { nonNullable: true }),
+    category: new FormControl('', { nonNullable: true }),
+    description: new FormControl('', { nonNullable: true }),
+    priority: new FormControl(Priority.LOWEST, { nonNullable: true }),
+    duration: new FormControl('', { nonNullable: true, validators: Validators.required })
   });
 
   constructor(
@@ -43,12 +46,13 @@ export class CreateActivityComponent implements OnInit, OnDestroy {
     }
 
     this.createActivityForm.addControl('status', new UntypedFormControl(data.status));
-    this.createActivityForm.addControl('category', new UntypedFormControl({ value: data.category.name, disabled: true }));
+    this.createActivityForm.setControl('category', new FormControl({ value: data.category.name, disabled: true }));
 
     // Initialize form fields using config files
     this.statuses = activityConfig.statuses;
     this.priorities = Object.values(Priority).filter(value => typeof value === 'string') as string[];
     this.topics = activityConfig.topics.filter(topic => topic.toUpperCase() !== data.category.name.toUpperCase());
+    this.topic = data.category;
   }
 
   ngOnInit(): void {
@@ -86,20 +90,20 @@ export class CreateActivityComponent implements OnInit, OnDestroy {
   }
 
   private buildActivity(): Activity {
-    const category = this.createActivityForm.get('category')?.value;
-    const status: string = this.createActivityForm.get('status')?.value;
+    const topicId = this.topic.id;
+    const status: string = this.createActivityForm.value.status!;
     const toDoStatus: any = Status.to_do;
-    const priority = Priority[this.createActivityForm.get('priority')?.value] as any;
+    const priority = Priority[this.createActivityForm.value.priority!] as any;
 
-    let activityBuilder = this.activityBuilder.setDescription(this.createActivityForm.get('description')?.value)
-      .setTitle(this.createActivityForm.get('name')?.value)
-      .setTopicId(category)
+    let activityBuilder = this.activityBuilder.setDescription(this.createActivityForm.value.description!)
+      .setTitle(this.createActivityForm.value.name!)
+      .setTopicId(topicId)
       .setCurrentPriority(priority)
       // @ts-ignore
       .setStatus(Status[status]);
 
     if (status === toDoStatus) {
-      activityBuilder = activityBuilder.withEstimatedTime(this.createActivityForm.get('duration')?.value);
+      activityBuilder = activityBuilder.withEstimatedTime(this.createActivityForm.value.duration!);
     }
 
     if (this.createActivityForm.get('topics')?.value) {

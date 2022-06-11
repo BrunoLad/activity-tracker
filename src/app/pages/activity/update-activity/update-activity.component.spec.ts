@@ -96,7 +96,7 @@ describe('UpdateActivityComponent', () => {
         component.updateForm.patchValue({
           description: 'a',
           priority: Priority.MEDIUM,
-          status: Status.to_do
+          status: Status.to_do.toString()
         });
         component.updateForm.updateValueAndValidity();
         fixture.detectChanges();
