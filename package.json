@@ -10,7 +10,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test --code-coverage",
     "lint": "npx eslint .",
-    "deploy": "ng deploy --base-href=/activity-tracker/ --no-silent",
+    "deploy": "ngh deploy --no-silent --base-href=/activity-tracker/",
     "prepare": "husky install"
   },
   "private": true,
