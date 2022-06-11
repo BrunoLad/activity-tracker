@@ -29,7 +29,7 @@ describe('FilterService', () => {
       const response = {};
 
       service.getCategories().subscribe(res => {});
-      const request = httpController.expectOne(`${environment.apiUrl}/categories`);
+      const request = httpController.expectOne(`${environment.apiUrl}/category`);
       expect(request.request.method).toEqual('GET');
       request.flush(response);
 

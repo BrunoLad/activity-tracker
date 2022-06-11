@@ -16,7 +16,7 @@ export class FilterService {
   }
 
   public getCategories(): Observable<Category[]> {
-    return this.http.get<Category[]>(`${this.apiUrl}/categories`);
+    return this.http.get<Category[]>(`${this.apiUrl}/category`);
   }
 
   public getTopicsByCategory(category: Category): Observable<Topic[]> {

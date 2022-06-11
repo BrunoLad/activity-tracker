@@ -1,12 +1,12 @@
 {
-  "categories": [
+  "category": [
     {
       "id": 1,
       "name": "work",
       "_links": {
         "topics": {
           "rel": "",
-          "href": "categories/1/topics/"
+          "href": "category/1/topics/"
         }
       }
     }
