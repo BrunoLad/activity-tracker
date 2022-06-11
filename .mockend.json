@@ -1,5 +1,5 @@
 {
-  "categories": {
+  "Categories": {
     "id": {
       "int": {
         "min": 1,
