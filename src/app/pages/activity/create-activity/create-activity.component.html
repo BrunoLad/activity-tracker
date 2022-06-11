@@ -43,10 +43,10 @@
                 formControlName="topics"
                 multiple>
                     <mat-select-trigger>
-                        {{ createActivityForm.get('topics')?.value && createActivityForm.get('topics')?.value[0] ?
-                        createActivityForm.get('topics')?.value[0] : '' }}
-                        <span *ngIf="createActivityForm.get('topics')?.value?.length > 1" class="example-additional-selection">
-                            (+{{createActivityForm.get('topics')?.value.length - 1}} {{createActivityForm.get('topics')?.value.length === 2 ? 'outro' : 'outros'}})
+                        {{ createActivityForm.value.topics && createActivityForm.value.topics[0] ?
+                        createActivityForm.value.topics[0] : '' }}
+                        <span *ngIf="createActivityForm.value.topics!.length > 1" class="example-additional-selection">
+                            (+{{createActivityForm.value.topics!.length - 1}} {{createActivityForm.value.topics!.length === 2 ? 'outro' : 'outros'}})
                         </span>
                     </mat-select-trigger>
                     <mat-option #matOption *ngFor="let topic of topics; let i = index" [value]="topic">

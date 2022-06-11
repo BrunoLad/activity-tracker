@@ -1,5 +1,5 @@
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
-import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { UntypedFormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -112,7 +112,7 @@ describe('CreateActivityComponent', () => {
   describe('statusToggle', () => {
     it('todo value selected', () => {
       spyOn(component.createActivityForm, 'get').withArgs('duration')
-        .and.returnValue(new FormControl(''));
+        .and.returnValue(new UntypedFormControl(''));
       spyOn(component.createActivityForm.get('duration')!, 'setValidators');
       spyOn(component.createActivityForm.get('duration')!, 'updateValueAndValidity');
 
@@ -128,7 +128,7 @@ describe('CreateActivityComponent', () => {
 
     it('other value selected', () => {
       spyOn(component.createActivityForm, 'get').withArgs('duration')
-        .and.returnValue(new FormControl(''));
+        .and.returnValue(new UntypedFormControl(''));
       spyOn(component.createActivityForm.get('duration')!, 'setValidators');
       spyOn(component.createActivityForm, 'patchValue');
       spyOn(component.createActivityForm.get('duration')!, 'updateValueAndValidity');
