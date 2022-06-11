@@ -6,11 +6,11 @@
     "json:server": "json-server --watch ./src/assets/mock/db.json --routes ./src/assets/mock/routes.json --port 8000",
     "serve": "ng serve",
     "start": "(trap 'kill 0' INT; npm run json:server & npm run serve)",
-    "build": "ng build",
+    "build": "ng build --prod",
     "watch": "ng build --watch --configuration development",
     "test": "ng test --code-coverage",
     "lint": "npx eslint .",
-    "deploy": "ngh deploy --no-silent --base-href=/activity-tracker/",
+    "deploy": "ng deploy --base-href=/activity-tracker/",
     "prepare": "husky install"
   },
   "private": true,

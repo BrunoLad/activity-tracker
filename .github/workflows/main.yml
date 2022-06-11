@@ -52,7 +52,7 @@ jobs:
           npm run test
       - name: Build
         run: |
-          npm run build --prod
+          npm run build
       - name: Deploy
         run: |
           npm run deploy
