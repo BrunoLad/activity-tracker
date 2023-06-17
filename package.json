@@ -9,7 +9,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test --code-coverage",
     "lint": "npx eslint .",
-    "deploy": "ng deploy --base-href=/activity-tracker/ --name=\"Bruno Ladeia\" --email=bruno13dm@outlook.com && angular-cli-ghpages --branch gh-pages",
+    "deploy": "ng deploy --base-href=/activity-tracker/ --name=\"Bruno Ladeia\" --email=bruno13dm@outlook.com",
     "prepare": "husky install"
   },
   "private": true,
@@ -42,7 +42,7 @@
     "@types/node": "^12.11.1",
     "@typescript-eslint/eslint-plugin": "5.17.0",
     "@typescript-eslint/parser": "5.17.0",
-    "angular-cli-ghpages": "^1.0.0",
+    "angular-cli-ghpages": "^1.0.3",
     "eslint": "^8.12.0",
     "husky": "^8.0.0",
     "jasmine-core": "~3.10.0",
