@@ -23,7 +23,7 @@ export class ActivityBuilder extends Builder<Activity> {
     return this;
   }
 
-  public setStatus(status: keyof typeof Status): ActivityBuilder {
+  public setStatus(status: Status): ActivityBuilder {
     this.activity.status = status;
     return this;
   }

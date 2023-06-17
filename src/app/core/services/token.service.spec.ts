@@ -7,8 +7,8 @@ import { TokenService } from './token.service';
 describe('TokenService', () => {
   let service: TokenService;
   const jwtHelperServiceStub = () => ({
-    isTokenExpired: () => {},
-    getTokenExpirationDate: () => {}
+    isTokenExpired: () => ({}),
+    getTokenExpirationDate: () => ({})
   });
 
   beforeEach(() => {

@@ -47,14 +47,14 @@ export class UpdateActivityComponent {
   }
 
   private buildActivity(): any {
-    const status: string = this.updateForm.value.status!;
+    const statusKey: string = this.updateForm.value.status!;
     const priority = Priority[this.updateForm.value.priority!] as any;
+    const status = Status[statusKey as keyof typeof Status];
 
     const activityBuidler = this.activityBuilder.setDescription(this.updateForm.value.description!)
       .setCurrentPriority(priority)
       .setTopicId(this.activity.topicId!)
-      // @ts-ignore
-      .setStatus(Status[status]);
+      .setStatus(status);
 
       return activityBuidler.build();
   }

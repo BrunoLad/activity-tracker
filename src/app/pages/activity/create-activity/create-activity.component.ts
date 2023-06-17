@@ -91,16 +91,16 @@ export class CreateActivityComponent implements OnInit, OnDestroy {
 
   private buildActivity(): Activity {
     const topicId = this.topic.id;
-    const status: string = this.createActivityForm.value.status!;
+    const statusKey: string = this.createActivityForm.value.status!;
     const toDoStatus: any = Status.to_do;
     const priority = Priority[this.createActivityForm.value.priority!] as any;
+    const status: Status = Status[statusKey as keyof typeof Status];
 
     let activityBuilder = this.activityBuilder.setDescription(this.createActivityForm.value.description!)
       .setTitle(this.createActivityForm.value.name!)
       .setTopicId(topicId)
       .setCurrentPriority(priority)
-      // @ts-ignore
-      .setStatus(Status[status]);
+      .setStatus(status);
 
     if (status === toDoStatus) {
       activityBuilder = activityBuilder.withEstimatedTime(this.createActivityForm.value.duration!);

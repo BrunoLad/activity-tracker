@@ -25,21 +25,19 @@ module.exports = function (config) {
       suppressAll: true // removes the duplicated traces
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, './coverage/activityTracker'),
+      dir: require('path').join(__dirname, './coverage/activity-tracker'),
       subdir: '.',
       reporters: [
-        { type: 'html', subdir: 'report-html' },
+        { type: 'html' },
         { type: 'text-summary' }
-      ],
-      // fixWebpackSourcePaths: true
+      ]
     },
-    reporters: ['progress', 'kjhtml', 'coverage'],
-    port: 9876,
+    reporters: ['progress', 'kjhtml'],
     colors: true,
-    logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['ChromeHeadless'],
+    logLevel: config.LOG_INFO,
     singleRun: true,
+    browsers: ['ChromeHeadless'],
     restartOnFileChange: true
   });
 };

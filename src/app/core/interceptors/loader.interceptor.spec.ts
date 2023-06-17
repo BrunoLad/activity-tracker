@@ -50,7 +50,7 @@ describe('LoaderInterceptor', () => {
         expect(res).toEqual(response);
         done();
       },
-      error: (err) => {},
+      error: (err) => ({}),
       complete: () => {
         expect(spy).toHaveBeenCalledTimes(2);
       }
@@ -73,7 +73,7 @@ describe('LoaderInterceptor', () => {
         expect(res).toEqual(response);
         done();
       },
-      error: (err) => {},
+      error: (err) => ({}),
       complete: () => {
         expect(spy).toHaveBeenCalledTimes(2);
       }

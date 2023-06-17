@@ -27,8 +27,8 @@ describe('AuthInterceptor', () => {
   });
 
   const toastrServiceStub = () => ({
-    clear: () => {},
-    error: (message: any, title: any, override: Partial<IndividualConfig>) => {}
+    clear: () => ({}),
+    error: (message: any, title: any, override: Partial<IndividualConfig>) => ({})
   });
 
   beforeEach(() => {
