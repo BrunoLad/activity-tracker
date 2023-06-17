@@ -50,9 +50,6 @@ jobs:
       - name: Unit Tests
         run: |
           npm run test
-      - name: Build
-        run: |
-          npm run build
       - name: Deploy
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}

@@ -165,7 +165,6 @@ describe('CreateActivityComponent', () => {
 
         fixture.detectChanges();
         const button = fixture.debugElement.query(By.css('button:last-of-type'));
-        console.log(button);
 
         expect(button.attributes['disabled']).toBeTruthy();
       });
