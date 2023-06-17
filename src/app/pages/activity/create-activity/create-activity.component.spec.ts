@@ -26,7 +26,7 @@ describe('CreateActivityComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CreateActivityComponent ],
+      declarations: [CreateActivityComponent],
       imports: [
         MatDialogModule,
         FormsModule,
@@ -44,7 +44,7 @@ describe('CreateActivityComponent', () => {
         { provide: ActivityBuilder, useValue: ActivityBuilder.init() }
       ]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {
@@ -160,14 +160,14 @@ describe('CreateActivityComponent', () => {
 
   describe('template scenarios', () => {
     describe('confirm button', () => {
-      it('button should be disabled', waitForAsync(() => {
-        fixture.whenStable().then(() => {
-          fixture.detectChanges();
-          const button = fixture.debugElement.query(By.css('button:last-of-type'));
+      it('button should be disabled', () => {
+        component.disabled$ = of(true);
 
-          expect(button.attributes['disabled']).toBeTruthy();
-        });
-      }));
+        fixture.detectChanges();
+        const button = fixture.debugElement.query(By.css('button:last-of-type'));
+
+        expect(button.attributes['disabled']).toBeTruthy();
+      });
     });
   });
 

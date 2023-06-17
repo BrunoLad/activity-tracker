@@ -23,8 +23,8 @@ describe('LoginComponent', () => {
     }
   };
   const tokenServiceStub = () => ({
-    isTokenValid: () => {},
-    hasToken: () => {}
+    isTokenValid: () => false,
+    hasToken: () => false
   });
 
   beforeEach(async () => {
@@ -93,11 +93,11 @@ describe('LoginComponent', () => {
     const email = 'abc@email.com';
     const value = '12345';
     component.loginForm.patchValue({ email, secret: value });
-    
+
     const spy = spyOn(router, 'navigateByUrl');
-    
+
     component.login();
-    
+
     const url = spy.calls.first().args[0];
     expect(url).toBe('/');
   }));
@@ -120,9 +120,9 @@ describe('LoginComponent', () => {
     newComponent.loginForm.patchValue({ email, secret: value });
 
     const spy = spyOn(router, 'navigateByUrl');
-    
+
     newComponent.login();
-    
+
     const url = spy.calls.first().args[0];
     expect(url).toBe(expectedRoute);
   }));
@@ -130,7 +130,7 @@ describe('LoginComponent', () => {
   describe('ngOnInit', () => {
     it('makes expected call', () => {
       spyOn(component, 'typingCallback').and.callThrough();
-      
+
       component.ngOnInit();
 
       expect(component.typingCallback).toHaveBeenCalled();

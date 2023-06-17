@@ -3,9 +3,9 @@ import { Status } from "../enums/status.enum";
 
 export class Activity {
   public id!: number;
-  public title: string = '';
+  public title = '';
   public createdOn!: Date;
-  public status!: keyof typeof Status;
+  public status!: Status;
   public maxPriority?: Priority;
   public currentPriority!: Priority;
   public resolvedOn?: Date;

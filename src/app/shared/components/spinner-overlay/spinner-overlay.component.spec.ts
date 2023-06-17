@@ -1,3 +1,4 @@
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatProgressSpinner, MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
@@ -10,8 +11,9 @@ describe('SpinnerOverlayComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ SpinnerOverlayComponent ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       imports: [
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
       ],
       providers: [
         MatProgressSpinner

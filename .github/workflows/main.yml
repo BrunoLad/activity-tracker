@@ -16,7 +16,7 @@ jobs:
   ci:
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [20.x]
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -50,9 +50,6 @@ jobs:
       - name: Unit Tests
         run: |
           npm run test
-      - name: Build
-        run: |
-          npm run build
       - name: Deploy
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}

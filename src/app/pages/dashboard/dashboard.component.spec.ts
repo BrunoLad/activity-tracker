@@ -53,7 +53,7 @@ describe('DashboardComponent', () => {
   });
 
   const authServiceStub = () => ({
-    logout: () => {},
+    logout: () => false,
     getUserInfo: () => ({ user: { usr: 'bruno' } })
   });
 
@@ -126,8 +126,8 @@ describe('DashboardComponent', () => {
         component.ongoing = of([{} as any, {} as any]);
         component.resolved = of([{} as any, {} as any]);
         spyOn(component, 'handleDragStart').and.callThrough();
-        spyOn(component, 'updateWithoutStatus').and.callFake(() => {});
-        spyOn(component, 'openActivityRegistrationDialog').and.callFake(() => {});
+        spyOn(component, 'updateWithoutStatus').and.callFake(() => false);
+        spyOn(component, 'openActivityRegistrationDialog').and.callFake(() => ({}));
 
         fixture.detectChanges();
 
@@ -331,7 +331,7 @@ describe('DashboardComponent', () => {
         fileName: 'abc'
       };
 
-      component.openActivityDetails({ stopPropagation: () => {} } as any, activity, Status.in_progress);
+      component.openActivityDetails({ stopPropagation: () => ({}) } as any, activity, Status.in_progress);
       expect(window.open).toHaveBeenCalledOnceWith(
         `${environment.activityTracker}/activities/topic/in_progress/abc/`,
         '_blank'
@@ -343,7 +343,7 @@ describe('DashboardComponent', () => {
         fileName: '2021-01-01-08_20:00-work.md'
       };
 
-      component.openActivityDetails({ stopPropagation: () => {} } as any, activity, Status.in_progress);
+      component.openActivityDetails({ stopPropagation: () => ({}) } as any, activity, Status.in_progress);
       expect(window.open).toHaveBeenCalledOnceWith(
         `${environment.activityTracker}/activities/topic/in_progress/2021-01-01-08_20_00-work/`,
         '_blank'

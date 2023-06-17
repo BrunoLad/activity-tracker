@@ -28,7 +28,7 @@ describe('ActivityService', () => {
       const response = {};
       const activity = new Activity();
 
-      service.createActivity(activity).subscribe(response => {});
+      service.createActivity(activity).subscribe(response => ({}));
       const request = httpController.expectOne(`${environment.apiUrl}/activities`);
       expect(request.request.method).toBe('POST');
       request.flush(response);
@@ -42,7 +42,7 @@ describe('ActivityService', () => {
       const response = {};
       const activity = {};
 
-      service.updateActivity(activity).subscribe(response => {});
+      service.updateActivity(activity).subscribe(response => ({}));
       const request = httpController.expectOne(`${environment.apiUrl}/activities`);
       expect(request.request.method).toBe('PUT');
       request.flush(response);
@@ -57,7 +57,7 @@ describe('ActivityService', () => {
       const topic = 2;
       const status = 'in_progress';
 
-      service.getActivities(topic, status).subscribe(response => {});
+      service.getActivities(topic, status).subscribe(response => ({}));
       const request = httpController.expectOne(`${environment.apiUrl}/activities?status=${status}&topicId=${topic}`);
       expect(request.request.method).toBe('GET');
       request.flush(response);
@@ -73,7 +73,7 @@ describe('ActivityService', () => {
       const status = 'to do';
       const fileName = 'aaa.md';
 
-      service.getActivity(topic, status, fileName).subscribe(res => {});
+      service.getActivity(topic, status, fileName).subscribe(res => ({}));
       const request = httpController.expectOne(
         `${environment.apiUrl}/activities/item?topic=${topic}&status=${encodeURIComponent(status)}&fileName=${fileName}`);
       expect(request.request.method).toBe('GET');

@@ -28,7 +28,7 @@ describe('FilterService', () => {
     it('should make expected call', () => {
       const response = {};
 
-      service.getCategories().subscribe(res => {});
+      service.getCategories().subscribe(res => ({}));
       const request = httpController.expectOne(`${environment.apiUrl}/category`);
       expect(request.request.method).toEqual('GET');
       request.flush(response);
@@ -50,7 +50,7 @@ describe('FilterService', () => {
         name: 'category'
       };
 
-      service.getTopicsByCategory(category).subscribe(res => {});
+      service.getTopicsByCategory(category).subscribe(res => ({}));
       const request = httpController.expectOne(`${environment.apiUrl}/path/to`);
       expect(request.request.method).toEqual('GET');
       request.flush(response);

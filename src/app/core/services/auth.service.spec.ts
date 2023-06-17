@@ -110,7 +110,7 @@ describe('AuthService', () => {
       };
 
       service.login(param).subscribe({
-        next: (res) => {},
+        next: (res) => ({}),
         error: (err) => {
           expect(err).toEqual(new Error('Acesso negado. Para obter acesso solicitar o grupo ACTIVITY_EDITOR'));
           done();

@@ -23,7 +23,7 @@ describe('GitProjectService', () => {
 
   describe('isPipelineRunning', () => {
     it('method makes expected call', () => {
-      service.isPipelineRunning().subscribe(res => {});
+      service.isPipelineRunning().subscribe(res => ({}));
       const request = httpController.expectOne(`${environment.apiUrl}/project/pipeline/running`);
       expect(request.request.method).toEqual('GET');
       request.flush(false);
