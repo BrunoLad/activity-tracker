@@ -152,9 +152,6 @@
             ]
           }
         },
-        "deploy": {
-          "builder": "angular-cli-ghpages:deploy"
-        },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
@@ -163,6 +160,9 @@
               "src/**/*.html"
             ]
           }
+        },
+        "deploy": {
+          "builder": "angular-cli-ghpages:deploy"
         }
       }
     }

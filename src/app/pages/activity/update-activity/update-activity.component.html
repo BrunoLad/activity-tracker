@@ -1,7 +1,7 @@
 <h1 mat-dialog-title align="center">Atualização de atividade</h1>
 <form [formGroup]="updateForm" class="container-fluid">
     <div class="row">
-        <mat-form-field *ngIf="activity.status !== StatusEnum[status]" class="col">
+        <mat-form-field *ngIf="activity.status !== status" class="col">
             <mat-label>Status</mat-label>
             <mat-select #statusSelect
                 formControlName="status"
