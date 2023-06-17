@@ -9,7 +9,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test --code-coverage",
     "lint": "eslint --ext .ts,.html .",
-    "deploy": "ng deploy --base-href=/activity-tracker/ --name=\"Bruno Ladeia\" --email=bruno13dm@outlook.com --no-silent",
+    "deploy": "ng deploy --base-href=/activity-tracker/ --name=\"Bruno Ladeia\" --email=bruno13dm@outlook.com",
     "prepare": "husky install"
   },
   "private": true,
