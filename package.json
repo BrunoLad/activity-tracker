@@ -2,7 +2,6 @@
   "name": "activity-tracker",
   "version": "0.0.0",
   "scripts": {
-    "ng": "ng",
     "json:server": "json-server --watch ./src/assets/mock/db.json --routes ./src/assets/mock/routes.json --port 8000",
     "serve": "ng serve",
     "start": "(trap 'kill 0' INT; npm run json:server & npm run serve)",
@@ -10,7 +9,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test --code-coverage",
     "lint": "npx eslint .",
-    "deploy": "ng deploy --no-silent",
+    "deploy": "ng deploy --base-href=/activity-tracker/ --name=\"Bruno Ladeia\" --email=bruno13dm@outlook.com && angular-cli-ghpages --branch gh-pages",
     "prepare": "husky install"
   },
   "private": true,
